@@ -1,0 +1,21 @@
+/* ---------- FoldText ---------- */
+
+.foldtext {
+  display: inline;
+  transform-style: preserve-3d;
+}
+
+.foldtext__panel {
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.foldtext__crease {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+  pointer-events: none;
+}

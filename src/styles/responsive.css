@@ -28,7 +28,7 @@
   .section
     *:not(.section__bg):not(.hl):not(.hero__selection):not(svg):not(svg *):not(
       .edit__shelf *
-    ):not(.edit__note *) {
+    ):not(.edit__note *):not(.better__row *):not(.snack__note *):not(.insta__rail *) {
     position: relative !important;
     inset: auto !important;
     width: auto !important;
@@ -222,9 +222,11 @@
     text-align: center !important;
   }
 
-  .better__strip {
-    margin: 0 -0.22rem;
-    width: calc(100% + 0.44rem) !important;
+  /* the product row keeps its own coordinate space, like the shelf */
+  .better__row {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1366 / 513;
   }
 
   /* ---- 4. chase the aura ---- */
@@ -233,23 +235,10 @@
     margin-bottom: 0.2rem;
   }
 
-  .aura__games {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.18rem;
-    margin: 0.3rem 0 !important;
-  }
-
-  .aura__game img {
-    aspect-ratio: 3 / 2;
-    object-fit: cover !important;
-    border-width: 0.02rem;
-  }
-
-  .aura__game figcaption {
-    font-size: 0.14rem;
-    text-align: center !important;
-    margin-top: 0.06rem;
+  /* the orbit needs its own box and the figure is part of the backdrop
+     photograph down here, so neither survives the stacked column */
+  .aura__orbit {
+    display: none;
   }
 
   .aura__closing {
@@ -261,6 +250,23 @@
   .snack__note {
     margin-top: 0.26rem !important;
     box-shadow: none;
+  }
+
+  /* both keep their own internal coordinate space, like the shelf and the
+     Everyday Edit card */
+  .snack__photo,
+  .snack__note {
+    height: auto !important;
+  }
+
+  .snack__photo-bar,
+  .snack__photo-frame {
+    height: auto !important;
+  }
+
+  .snack__note-title,
+  .snack__note-list {
+    position: absolute !important;
   }
 
   .snack__folders {
@@ -297,16 +303,14 @@
     display: none;
   }
 
+  /* The carousel keeps its own coordinate space and lays its cards out from
+     measured px, so it stays a single block that simply gets narrower rather
+     than being released into the column. */
   .insta__rail {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.14rem;
-  }
-
-  .insta__card img {
-    aspect-ratio: 27 / 46;
-    object-fit: cover !important;
-    border-radius: 0.1rem;
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1366 / 464;
   }
 
   /* ---- 7. footer ---- */

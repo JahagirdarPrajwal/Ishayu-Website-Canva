@@ -45,22 +45,14 @@
   object-fit: cover;
 }
 
+/* The reel rail occupies exactly the strip the five placeholder cards did:
+   top 1.91rem (page y 5211), 4.64rem tall, full width. The carousel lays its
+   own cards out inside that box. */
 .insta__rail {
   position: absolute;
-  inset: 0;
-  z-index: 2;
-}
-
-.insta__card {
-  position: absolute;
+  left: 0;
   top: 1.91rem;
-  width: 2.7rem;
-  height: 4.64rem;
-  display: block;
-}
-
-.insta__card img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: 4.64rem;
+  z-index: 2;
 }

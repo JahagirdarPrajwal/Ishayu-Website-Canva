@@ -63,6 +63,20 @@
   z-index: 3;
 }
 
+.snack__body-line,
+.snack__cta-line {
+  display: block;
+}
+
+.snack__body-run {
+  display: inline-block;
+}
+
+/* ---- photograph ----
+   The "slay.png" title bar sits above the picture rather than inside the
+   frame: RefineFrame gives whatever it wraps its own box, and the bar was
+   baked into the top of the original crop (CLAUDE.md §8.13). The two
+   together occupy exactly what the single image did. */
 .snack__photo {
   position: absolute;
   left: 6.55rem;
@@ -70,6 +84,16 @@
   width: 4.68rem;
   height: 5.62rem;
   z-index: 2;
+}
+
+.snack__photo-bar {
+  display: block;
+  width: 100%;
+  height: 0.44rem;
+}
+
+.snack__photo-frame {
+  height: 5.18rem;
 }
 
 .snack__folders {
@@ -83,6 +107,11 @@
   left: 11.72rem;
   width: 0.94rem;
   text-align: center;
+}
+
+.snack__folder-float {
+  width: 100%;
+  will-change: transform;
 }
 
 .snack__folder img {
@@ -99,6 +128,12 @@
   color: var(--cyan);
 }
 
+/* ---- notes card ----
+   The card art is chrome only now; the title, the five rows and the
+   selection are real DOM so they can type, sweep and actually be ticked.
+   Everything inside is sized in cqw against the card's own width — 100cqw
+   is the 412 design px it was measured at — so one set of numbers holds at
+   any card size, including the mobile reflow. */
 .snack__note {
   position: absolute;
   left: 8.69rem;
@@ -108,4 +143,102 @@
   border-radius: 0.1rem;
   box-shadow: 0 0.06rem 0.18rem rgba(0, 0, 0, 0.25);
   z-index: 4;
+  container-type: inline-size;
+}
+
+.snack__note-card {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.snack__note-title {
+  position: absolute;
+  margin: 0;
+  left: 8.252cqw; /* card x 34 */
+  top: 14.078cqw; /* card y 58 */
+  /* tuned so Archivo reproduces the 187 card px the title ran to */
+  font-size: 5.19cqw;
+  font-weight: 700;
+  line-height: 8.01cqw; /* the band is 33 card px tall */
+  color: #1a1a1a;
+  letter-spacing: -0.006em;
+}
+
+.snack__note-run {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* the selection on the title: a tan wash with a bar-and-dot handle at each
+   end, matching the treatment on the Everyday Edit card */
+.snack__note-mark {
+  position: relative;
+  display: inline-block;
+  padding: 0 1.2cqw;
+  background-image: linear-gradient(#f0d7a3, #f0d7a3);
+  background-repeat: no-repeat;
+  background-size: var(--sel-sweep, 100%) 100%;
+}
+
+.snack__note-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.7cqw;
+  background: #e7b548;
+  opacity: var(--sel-handle, 1);
+}
+
+.snack__note-handle::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 2.4cqw;
+  height: 2.4cqw;
+  margin-left: -1.2cqw;
+  border-radius: 50%;
+  background: #e7b548;
+}
+
+.snack__note-handle--start {
+  left: -0.35cqw;
+}
+
+.snack__note-handle--start::before {
+  top: -1.8cqw;
+}
+
+.snack__note-handle--end {
+  right: -0.35cqw;
+}
+
+.snack__note-handle--end::before {
+  bottom: -1.8cqw;
+}
+
+.snack__note-list {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  left: 9.709cqw; /* card x 40 */
+  top: 26.7cqw; /* first row ink at card y 110 */
+  right: 4cqw;
+}
+
+.snack__note-list li {
+  height: 7.221cqw; /* the card's 29.75px row pitch */
+  display: flex;
+  align-items: center;
+}
+
+.snack__note-list .snack__note-run {
+  display: block;
+  width: 100%;
+}
+
+/* the ring and the fill are the card's gold; the words stay dark ink */
+.snack__note-list .springcheck__label {
+  color: #1a1a1a;
 }

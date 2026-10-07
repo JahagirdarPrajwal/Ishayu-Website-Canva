@@ -1,0 +1,26 @@
+/* ---------- RefineFrame ----------
+   The <img> always carries the frame; the canvas is an overlay that only
+   becomes visible once it has something real to draw, and fades back out
+   when the resolve finishes. Nothing here can leave the frame empty. */
+
+.refineframe {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.refineframe__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.refineframe__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity linear;
+}

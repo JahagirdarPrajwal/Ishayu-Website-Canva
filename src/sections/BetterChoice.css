@@ -35,11 +35,42 @@
   --hl-h: 0.76rem;
 }
 
-.better__strip {
+/* ---- product row ----
+   Was one flat strip (products/strip.jpg): four grey studio cells with the
+   packs baked in, divided by seams. The grey and the seams are gone — the
+   packs float on the section's white, which is what the cut-outs were
+   supplied for. The block still occupies exactly what the strip did, so
+   nothing below it moves.
+
+   Children are placed as a share of the 1366 x 513 block rather than in rem,
+   so one set of coordinates serves both the artboard and the mobile reflow.
+   The offsets arrive as custom properties because the mobile stylesheet
+   resets `width` with !important, which an inline style cannot beat. */
+.better__row {
   position: absolute;
   left: 0;
   top: 1.57rem; /* page y 1847 */
   width: 100%;
   height: 5.13rem;
-  object-fit: cover;
+}
+
+.better__product {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+}
+
+.better__product-float {
+  width: 100%;
+  will-change: transform;
+}
+
+.better__product-float img {
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  /* a soft cast shadow on the white, so each pack reads as floating above
+     the page rather than pasted onto it */
+  filter: drop-shadow(0 0.11rem 0.09rem rgba(40, 38, 35, 0.16));
 }

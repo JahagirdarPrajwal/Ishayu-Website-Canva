@@ -1,0 +1,90 @@
+/* ---------- SpringCheck ---------- */
+
+.springcheck {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--sc-box) * 0.52);
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--sc-color);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.springcheck:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.springcheck__box {
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--sc-box);
+  height: var(--sc-box);
+  border-radius: var(--sc-radius);
+  /* a share of the box, not an em: this project's root font-size is 100px,
+     so an em here resolves against whatever the row inherits and the ring
+     swallows the box whole */
+  border: calc(var(--sc-box) * 0.085) solid var(--sc-ring, var(--sc-color));
+  overflow: hidden;
+}
+
+.springcheck__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--sc-fill);
+  border-radius: inherit;
+  transform: scale(0);
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* No opacity here: the tick's own path carries both the draw-on
+   (stroke-dashoffset) and its opacity, and a 0 on the wrapper would hide it
+   whatever the path does. */
+.springcheck__tick {
+  position: absolute;
+  inset: 12%;
+  width: 76%;
+  height: 76%;
+}
+
+.springcheck__label {
+  position: relative;
+  font-size: var(--sc-font);
+  line-height: 1.25;
+  transition: opacity 0.35s ease;
+}
+
+.springcheck.is-on .springcheck__label {
+  opacity: var(--sc-done);
+}
+
+.springcheck__rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 56%;
+  height: 0.075em;
+  background: currentColor;
+  transform: scaleX(0);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.springcheck__rule--left {
+  transform-origin: left center;
+}
+
+.springcheck__rule--center {
+  transform-origin: center center;
+}
+
+.springcheck__rule--right {
+  transform-origin: right center;
+}

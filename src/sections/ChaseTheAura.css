@@ -15,7 +15,27 @@
   top: 0.66rem; /* page y 2426 */
   width: 2.18rem;
   height: 2.31rem;
-  z-index: 3;
+  z-index: 5;
+}
+
+.aura__ie canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---- the orbit, with the figure inside it ----
+   The background plate carries only his cast shadow now, so the cut-out is
+   the figure. He lives inside the orbit component rather than beside it, so
+   the ring can go behind him and then in front — see the note at the top of
+   OrbitImages.jsx. His box is the one measured off the export: x 510-844,
+   y 2812-3494 on the artboard. */
+.aura__orbit {
+  position: absolute;
+  left: 1.87rem;
+  top: 2.93rem;
+  width: 10rem; /* the component's 1000px base, 1:1 with design px */
+  z-index: 1;
 }
 
 /* ---- headline cluster, upper right ---- */
@@ -82,37 +102,17 @@
   z-index: 3;
 }
 
-/* ---- game tiles ---- */
-.aura__games {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
+/* The static tile row is gone — the four games ride the orbit instead. */
+
+/* one run per line so the type-on clip has each line's own box */
+.aura__find-line,
+.aura__closing-line {
+  display: block;
 }
 
-.aura__game {
-  position: absolute;
-  margin: 0;
-  top: 6.98rem; /* page y 3058 */
-  width: 1.68rem;
-}
-
-.aura__game img {
-  width: 100%;
-  height: 1.2rem;
-  object-fit: cover;
-  border-radius: 0.1rem;
-  border: 0.03rem solid #141414;
-  box-shadow: 0 0.04rem 0.1rem rgba(0, 0, 0, 0.35);
-}
-
-.aura__game figcaption {
-  margin-top: 0.09rem;
-  text-align: center;
-  font-size: 0.215rem;
-  font-weight: 500;
-  letter-spacing: var(--track-body);
-  color: var(--white);
-  white-space: nowrap;
+.aura__find-run,
+.aura__closing-run {
+  display: inline-block;
 }
 
 /* ---- closing copy, lower right ---- */
