@@ -1,0 +1,116 @@
+/* ============================================================
+   ISHAYU — design tokens
+   Recreated from the Canva export (1366 x 6520 design canvas).
+   All layout values are expressed in "design pixels": 1rem = 100
+   design px. The root font-size is set from the viewport width in
+   main.jsx so the whole canvas scales proportionally.
+   ============================================================ */
+
+:root {
+  /* ---- canvas ---- */
+  --design-width: 1366;
+
+  /* ---- colour ---- */
+  --blue-deep: #014e9c; /* section backgrounds, "with us"      */
+  --blue-heading: #004aad; /* "Make your"                         */
+  --blue-sky: #004eac; /* hero sky                            */
+  --yellow: #ffe847; /* highlight bands                     */
+  --cyan: #2a98e6; /* "mean it", "Instagram"              */
+  --green-pill: #8acd01; /* active nav pill                     */
+  --white: #ffffff;
+  --ink: #000000;
+
+  /* loading screen — both sampled from the artwork rather than guessed:
+     the cream is the wordmark colour in `ishayu logo.png`, the green is the
+     ground in `aura/aura-bg.jpg` (the lime pill green is too light to read
+     as a huge wordmark on cream) */
+  --cream: #f5f5dd;
+  --green-deep: #55781b;
+
+  /* ---- type ---- */
+  --sans: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --serif: 'Playfair Display', 'Didot', 'Bodoni MT', Georgia, serif;
+
+  /* tracking needed to match the original's line lengths */
+  --track-body: -0.011em;
+  --track-display: -0.032em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  /* the loading screen's cream, so the very first paint — before React has
+     mounted the loader — is already the right colour. The sections cover the
+     page edge to edge, so this is never visible afterwards. */
+  background: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: none;
+}
+
+/* ---- shared primitives ------------------------------------ */
+
+/* a full-width section whose children are absolutely positioned
+   against the 1366-wide design canvas */
+.section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.section__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* absolutely positioned layer helper */
+.abs {
+  position: absolute;
+}
+
+/* Yellow marker-pen highlight behind italic words.
+   The band is drawn as an explicitly sized rectangle (--hl-w / --hl-h /
+   --hl-x / --hl-y, in design px ÷ 100) so it matches the export exactly
+   regardless of how the italic face measures. */
+.hl {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  isolation: isolate;
+}
+
+.hl::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  background: var(--yellow);
+  left: var(--hl-x, 0);
+  top: var(--hl-y, 0);
+  width: var(--hl-w, 100%);
+  height: var(--hl-h, 100%);
+}
+
+.serif-italic {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+}

@@ -1,0 +1,111 @@
+/* ---------- Section 5 — snack like you mean it ---------- */
+
+.snack {
+  height: 8.6rem; /* page y 4160 → 5020 */
+  background: var(--blue-deep);
+  color: var(--white);
+}
+
+.snack__heading {
+  margin: 0;
+  position: absolute;
+  left: 0.84rem;
+  top: 1.97rem;
+  font-size: 0.678rem;
+  font-weight: 400;
+  line-height: 0.63rem;
+  letter-spacing: var(--track-display);
+  z-index: 3;
+}
+
+.snack__line1,
+.snack__line2 {
+  display: block;
+  white-space: nowrap;
+}
+
+/* band: x 187→416, y 4436→4481 */
+.snack__italic {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.62rem;
+  letter-spacing: 0;
+  color: var(--cyan);
+  margin-left: 0.13rem;
+  --hl-x: -0.14rem;
+  --hl-y: 0.16rem;
+  --hl-w: 2.29rem;
+  --hl-h: 0.45rem;
+}
+
+.snack__body {
+  margin: 0;
+  position: absolute;
+  left: 0.83rem;
+  top: 3.61rem;
+  font-size: 0.283rem;
+  font-weight: 400;
+  line-height: 0.352rem;
+  letter-spacing: var(--track-body);
+  z-index: 3;
+}
+
+.snack__cta {
+  margin: 0;
+  position: absolute;
+  left: 0.83rem;
+  top: 5.39rem;
+  font-size: 0.283rem;
+  font-weight: 700;
+  line-height: 0.385rem;
+  letter-spacing: var(--track-body);
+  z-index: 3;
+}
+
+.snack__photo {
+  position: absolute;
+  left: 6.55rem;
+  top: 0.64rem; /* page y 4224 */
+  width: 4.68rem;
+  height: 5.62rem;
+  z-index: 2;
+}
+
+.snack__folders {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.snack__folder {
+  position: absolute;
+  left: 11.72rem;
+  width: 0.94rem;
+  text-align: center;
+}
+
+.snack__folder img {
+  width: 0.94rem;
+  height: 0.78rem;
+}
+
+.snack__folder span {
+  display: block;
+  margin-top: 0.02rem;
+  font-size: 0.175rem;
+  font-weight: 600;
+  letter-spacing: var(--track-body);
+  color: var(--cyan);
+}
+
+.snack__note {
+  position: absolute;
+  left: 8.69rem;
+  top: 4.84rem; /* page y 4644 */
+  width: 4.12rem;
+  height: 2.82rem;
+  border-radius: 0.1rem;
+  box-shadow: 0 0.06rem 0.18rem rgba(0, 0, 0, 0.25);
+  z-index: 4;
+}

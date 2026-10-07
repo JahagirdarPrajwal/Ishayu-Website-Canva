@@ -1,0 +1,19 @@
+{
+  "//": "The project is JS; this exists only so editors stop complaining about the one TypeScript file we vendored, src/components/originkit/ui/tactile-button.tsx (CLAUDE.md §8.10). Vite/esbuild strips the types either way — nothing here is part of the build.",
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "checkJs": false,
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src"]
+}

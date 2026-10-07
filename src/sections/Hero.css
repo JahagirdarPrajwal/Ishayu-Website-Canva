@@ -1,0 +1,217 @@
+/* ---------- Section 1 — Hero ---------- */
+
+.hero {
+  height: 7.68rem; /* 768 design px */
+  background: var(--blue-sky);
+}
+
+/* ---- navigation ---- */
+.hero__nav {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+/* The pill is now just the measured box the OriginKit tactile button sits
+   in — border, type and fill moved into the component's props so it can
+   animate them (see src/components/NavPill.jsx). The geometry below is
+   unchanged from the approved recreation. */
+.hero__pill {
+  position: absolute;
+  top: 0.57rem;
+  height: 0.39rem;
+  /* the button's outer wrapper is an inline-block, so in a normal block the
+     line box's baseline leading would push it below the slot — flex takes
+     the cap out of the text flow and stretches it to the measured box */
+  display: flex;
+}
+
+.hero__pill > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The button's base layer stays visible at rest, which is what makes the
+   press read as a press: the pill sits raised on its ledge, and clicking
+   sinks the cap down onto it. Revealing the ledge on hover instead inverts
+   the reading — a flat pill that grows a shadow looks like it is popping
+   up, so the click afterwards feels like a return rather than a push.
+   The ledge inherits the cap's border, which would draw a second outline
+   below every pill; the fill alone carries it, so the border is dropped.
+   !important because the component sets it inline. */
+.hero__pill div[aria-hidden='true'] {
+  border-color: transparent !important;
+}
+
+/* ---- headline ---- */
+.hero__headline {
+  margin: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.hero__line1 {
+  position: absolute;
+  z-index: 2;
+  left: 4.2rem;
+  top: 1.58rem;
+  font-size: 1.20rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.004em;
+  color: var(--white);
+}
+
+.hero__line2 {
+  position: absolute;
+  z-index: 1;
+  left: 4.4rem;
+  top: 2.64rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.201rem;
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* yellow band: x 447→920, y 275→386 on the artboard */
+.hero__band {
+  --hl-x: 0.07rem;
+  --hl-y: 0.11rem;
+  --hl-w: 4.73rem;
+  --hl-h: 1.11rem;
+}
+
+/* ---- collage cards ---- */
+.hero__card {
+  position: absolute;
+}
+
+.hero__card img {
+  display: block;
+  object-fit: cover;
+}
+
+.hero__card-label {
+  display: block;
+  margin-top: 0.03rem;
+  text-align: center;
+  font-size: 0.16rem;
+  font-weight: 400;
+  letter-spacing: var(--track-body);
+  color: var(--white);
+  white-space: nowrap;
+}
+
+/* ---- cursor ---- */
+.hero__cursor {
+  position: absolute;
+  left: 9.43rem;
+  top: 4.06rem;
+  width: 0.28rem;
+  height: 0.4rem;
+  z-index: 6;
+}
+
+/* ---- sub copy ---- */
+.hero__sub {
+  margin: 0;
+  position: absolute;
+  top: 6.23rem;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 6;
+  color: var(--white);
+}
+
+.hero__sub-line1,
+.hero__sub-line2 {
+  display: block;
+  position: relative; /* containing block for the typing caret */
+  font-size: 0.285rem;
+  line-height: 0.352rem;
+  letter-spacing: var(--track-body);
+  white-space: nowrap;
+}
+
+.hero__sub-line2 {
+  font-style: italic;
+}
+
+/* Shrink-wraps the line so the type-on clip and the caret have the text's
+   own box to work against rather than the full-width centred line. One box
+   around one unbroken run — the text is not split, so the line measures
+   exactly as it did before. */
+.hero__sub-run {
+  display: inline-block;
+  position: relative;
+}
+
+/* Typing caret. Invisible at rest, so it adds no ink to the settled page;
+   it is a sibling of the run rather than a child so the reveal clip cannot
+   eat it. Driven from the run's measured width in src/anim/helpers.js. */
+.hero__sub-caret {
+  position: absolute;
+  left: 50%;
+  top: 0.05rem;
+  width: 0.018rem;
+  height: 0.25rem;
+  background: var(--white);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* text-selection styling around "your backup plan".
+   The wash is a flat single-colour gradient instead of a plain background
+   so its reveal can be driven by background-size; --sel-sweep and
+   --sel-handle both default to the resting value, so with no inline
+   override this renders exactly as the static build did. */
+.hero__selection {
+  position: relative;
+  background-image: linear-gradient(
+    rgba(120, 190, 240, 0.45),
+    rgba(120, 190, 240, 0.45)
+  );
+  background-repeat: no-repeat;
+  background-size: var(--sel-sweep, 100%) 100%;
+  padding: 0 0.01rem;
+}
+
+.hero__selection::before,
+.hero__selection::after {
+  content: '';
+  position: absolute;
+  width: 0.022rem;
+  height: 0.33rem;
+  background: #3aa3e8;
+  top: -0.05rem;
+  border-radius: 0.011rem;
+  opacity: var(--sel-handle, 1);
+}
+
+.hero__selection::before {
+  left: -0.015rem;
+}
+
+.hero__selection::after {
+  right: -0.015rem;
+}
+
+/* red spell-check squiggle */
+.hero__squiggle {
+  text-decoration: underline wavy #e23b2e;
+  text-decoration-thickness: 0.014rem;
+  text-underline-offset: 0.045rem;
+}
+
+/* the collage wrapper is layout-neutral on the artboard; the mobile
+   stylesheet turns it into a grid */
+.hero__collage {
+  position: absolute;
+  inset: 0;
+}

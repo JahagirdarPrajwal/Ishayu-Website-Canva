@@ -1,0 +1,396 @@
+/* ============================================================
+   RESPONSIVE LAYER
+   ------------------------------------------------------------
+   Desktop (>= 860px) is the Canva artboard, reproduced exactly and
+   scaled proportionally — nothing in this file touches it.
+
+   Below 860px there is no reference to copy from, so the sections are
+   released from the artboard and stacked into a single readable
+   column, reusing the same assets, colours, type styles and copy.
+   This is a reflow, not a redesign. Deleting this file and its import
+   in main.jsx reverts to a purely proportional shrink of the artboard.
+
+   Below the breakpoint main.jsx re-bases the scale on a 430px canvas,
+   so here 1rem = 100 mobile px (0.17rem = 17px, and so on).
+   ============================================================ */
+
+@media (max-width: 859.98px) {
+  /* ---- release everything from the artboard ---- */
+  .section {
+    height: auto !important;
+    padding: 0.36rem 0.22rem 0.44rem;
+  }
+
+  /* The shelf and the notes card carry their own internal coordinate space
+     (shares of their own box, not of the artboard), so they survive the
+     reflow by simply being narrower. Releasing their children here would
+     drop nine absolutely positioned pieces into the flow. */
+  .section
+    *:not(.section__bg):not(.hl):not(.hero__selection):not(svg):not(svg *):not(
+      .edit__shelf *
+    ):not(.edit__note *) {
+    position: relative !important;
+    inset: auto !important;
+    width: auto !important;
+    max-width: 100%;
+    text-align: left !important;
+    white-space: normal !important;
+    z-index: 2;
+  }
+
+  .section__bg {
+    z-index: 0;
+  }
+
+  .section img:not(.section__bg) {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* highlight bands fall back to a snug inline box */
+  .hl {
+    --hl-x: -0.015rem;
+    --hl-y: 0.04rem;
+    --hl-w: calc(100% + 0.03rem);
+    --hl-h: 0.72em;
+    margin: 0 !important;
+    top: auto !important;
+    font-size: inherit !important;
+  }
+
+  /* ---- type scale ---- */
+  .hero__line1,
+  .edit__heading,
+  .better__heading,
+  .aura__chase,
+  .aura__closing-line1,
+  .snack__line1,
+  .insta__heading,
+  .footer__line1 {
+    display: block;
+    font-size: 0.4rem !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.02em !important;
+    margin: 0 0 0.06rem !important;
+  }
+
+  .hero__line2,
+  .better__italic,
+  .aura__aura,
+  .aura__closing-line2,
+  .snack__line2,
+  .footer__line2 {
+    display: block;
+    font-size: 0.38rem !important;
+    line-height: 1.12 !important;
+    margin: 0 0 0.16rem !important;
+  }
+
+  .hero__sub-line1,
+  .hero__sub-line2,
+  .edit__body,
+  .aura__energy,
+  .aura__find,
+  .aura__closing-body,
+  .snack__body,
+  .snack__cta,
+  .footer__body {
+    font-size: 0.17rem !important;
+    line-height: 0.25rem !important;
+    margin: 0 0 0.16rem !important;
+  }
+
+  /* ---- 1. hero ---- */
+  .hero {
+    padding-top: 1.05rem;
+    padding-bottom: 0.3rem;
+  }
+
+  .hero__nav {
+    position: absolute !important;
+    inset: 0.18rem 0.18rem auto !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.07rem;
+    justify-content: center;
+    z-index: 5;
+  }
+
+  /* The pill is now a box holding the OriginKit tactile button, so the
+     metrics belong on the button's cap. They need !important because the
+     component inline-styles them. The button's base layer is absolutely
+     positioned; the blanket rule above would drop it into the flow as a
+     visible block, so it is taken out here. */
+  .hero__nav .hero__pill {
+    position: relative !important;
+    height: 0.3rem;
+    flex: 0 0 auto;
+  }
+
+  .hero__nav .hero__pill div[aria-hidden='true'] {
+    display: none !important;
+  }
+
+  .hero__nav .hero__pill > div,
+  .hero__nav .hero__pill > div > div {
+    height: 100% !important;
+  }
+
+  .hero__nav .hero__pill a {
+    height: 100% !important;
+    padding: 0 0.13rem !important;
+    font-size: 0.135rem !important;
+  }
+
+  .hero__collage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.12rem;
+    margin: 0.26rem 0 0.2rem;
+  }
+
+  .hero__card {
+    margin: 0;
+  }
+
+  .hero__card-label {
+    font-size: 0.12rem;
+  }
+
+  .hero__cursor {
+    display: none;
+  }
+
+  /* the type-on caret belongs to the desktop entrance only */
+  .hero__sub-caret {
+    display: none;
+  }
+
+  .hero__sub {
+    text-align: center !important;
+    margin-top: 0.1rem !important;
+  }
+
+  .hero__sub-line1,
+  .hero__sub-line2 {
+    text-align: center !important;
+  }
+
+  /* ---- 2. everyday edit ---- */
+  .edit__shelf {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 700 / 660; /* the block the composite used to occupy */
+    margin-bottom: 0.26rem;
+  }
+
+  /* the blanket img rule above would override the rail's share-of-the-shelf
+     width with 100% */
+  .edit__shelf img.edit__rail {
+    width: var(--w) !important;
+  }
+
+  /* The generic .hl fallback above is a single class, so the two-class
+     `.edit__heading .hl` outranks it and the band kept its artboard
+     geometry here — a yellow bar sitting beside the word instead of behind
+     it. Restated at matching specificity. */
+  .edit__heading .hl {
+    --hl-x: -0.015rem;
+    --hl-y: 0.04rem;
+    --hl-w: calc(100% + 0.03rem);
+    --hl-h: 0.72em;
+  }
+
+  .edit__note {
+    margin-top: 0.26rem;
+    height: auto !important; /* the card art sets it once it is narrower */
+  }
+
+  /* ---- 3. better choice ---- */
+  .better {
+    padding-bottom: 0 !important;
+  }
+
+  .better__heading {
+    text-align: center !important;
+    margin-bottom: 0.26rem !important;
+  }
+
+  .better__heading .better__plain,
+  .better__heading .better__italic {
+    text-align: center !important;
+  }
+
+  .better__strip {
+    margin: 0 -0.22rem;
+    width: calc(100% + 0.44rem) !important;
+  }
+
+  /* ---- 4. chase the aura ---- */
+  .aura__ie {
+    width: 1.05rem !important;
+    margin-bottom: 0.2rem;
+  }
+
+  .aura__games {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.18rem;
+    margin: 0.3rem 0 !important;
+  }
+
+  .aura__game img {
+    aspect-ratio: 3 / 2;
+    object-fit: cover !important;
+    border-width: 0.02rem;
+  }
+
+  .aura__game figcaption {
+    font-size: 0.14rem;
+    text-align: center !important;
+    margin-top: 0.06rem;
+  }
+
+  .aura__closing {
+    margin-top: 0.3rem;
+  }
+
+  /* ---- 5. snack like you mean it ---- */
+  .snack__photo,
+  .snack__note {
+    margin-top: 0.26rem !important;
+    box-shadow: none;
+  }
+
+  .snack__folders {
+    display: flex !important;
+    gap: 0.35rem;
+    margin-top: 0.26rem !important;
+  }
+
+  .snack__folder {
+    width: 0.85rem !important;
+    flex: 0 0 auto;
+  }
+
+  .snack__folder img {
+    width: 0.85rem !important;
+  }
+
+  .snack__folder span {
+    text-align: center !important;
+    font-size: 0.14rem;
+  }
+
+  /* ---- 6. instagram ---- */
+  .insta {
+    padding-bottom: 0.3rem !important;
+  }
+
+  .insta__heading {
+    text-align: center !important;
+    margin-bottom: 0.26rem !important;
+  }
+
+  .insta__band {
+    display: none;
+  }
+
+  .insta__rail {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.14rem;
+  }
+
+  .insta__card img {
+    aspect-ratio: 27 / 46;
+    object-fit: cover !important;
+    border-radius: 0.1rem;
+  }
+
+  /* ---- 7. footer ---- */
+  .footer__logo {
+    width: 1.55rem !important;
+    margin: 0.36rem 0 0.26rem;
+  }
+
+  .footer__contact h3 {
+    font-size: 0.23rem;
+    line-height: 1.25;
+    margin-top: 0.18rem;
+  }
+
+  .footer__contact p {
+    font-size: 0.145rem;
+    line-height: 0.2rem;
+    margin: 0.04rem 0 0 !important;
+  }
+
+  .footer__social {
+    display: inline-flex !important;
+    gap: 0.05rem;
+  }
+
+  .footer__icon {
+    width: 0.13rem !important;
+    height: 0.13rem !important;
+    flex: 0 0 auto;
+  }
+}
+
+/* ---- spacing clean-up for the stacked layout ---- */
+@media (max-width: 859.98px) {
+  .hero__headline,
+  .aura__headline,
+  .aura__closing,
+  .snack__heading,
+  .footer__heading,
+  .better__heading,
+  .insta__heading {
+    display: block;
+  }
+
+  .aura__chase,
+  .aura__aura,
+  .aura__energy,
+  .aura__find,
+  .hero__sub-line1,
+  .hero__sub-line2,
+  .snack__line1,
+  .snack__line2,
+  .footer__line1,
+  .footer__line2,
+  .better__plain,
+  .better__italic,
+  .aura__closing-line1,
+  .aura__closing-line2 {
+    display: block;
+  }
+
+  .aura__aura {
+    width: fit-content !important;
+    margin-bottom: 0.14rem !important;
+  }
+
+  .aura__energy {
+    margin-bottom: 0.3rem !important;
+  }
+
+  .hero__sub {
+    margin-top: 0.26rem !important;
+  }
+
+  .insta__card {
+    display: block;
+  }
+
+  .insta__rail > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 50%;
+  }
+
+  .footer__logo {
+    margin-bottom: 0.3rem;
+  }
+}

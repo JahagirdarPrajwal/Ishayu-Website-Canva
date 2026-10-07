@@ -1,0 +1,35 @@
+/* ---------- Loading screen ----------
+   Sized in the same design-pixel rem as the artboard (CLAUDE.md §2) so the
+   wordmark grows with the canvas instead of being pinned to 16px. */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  will-change: transform;
+  /* the panel is only ever a cover — it must not eat clicks once it starts
+     leaving, and the site underneath is already live */
+  pointer-events: none;
+}
+
+.loader__word {
+  display: flex;
+  /* a letter's descender-free cap height still needs room for the rise */
+  overflow: hidden;
+  padding: 0.06rem 0;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.68rem;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--green-deep);
+}
+
+.loader__letter {
+  display: inline-block;
+  will-change: transform, opacity;
+}

@@ -1,0 +1,108 @@
+/* ---------- Section 7 — talk snacks with us ---------- */
+
+.footer {
+  height: 8.38rem; /* page y 5682 → 6520 */
+  background: #4f8d20;
+  color: var(--white);
+}
+
+.footer .section__bg {
+  object-position: center top;
+}
+
+.footer__heading {
+  margin: 0;
+  position: absolute;
+  left: 0.74rem;
+  top: 1.57rem;
+  font-size: 0.676rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  z-index: 3;
+}
+
+.footer__line1 {
+  display: block;
+  white-space: nowrap;
+}
+
+/* band: x 77→272, y 5912→5952 */
+.footer__line2 {
+  display: inline-block;
+  margin-top: -0.30rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.617rem;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--blue-deep);
+  --hl-x: 0.03rem;
+  --hl-y: 0.22rem;
+  --hl-w: 1.95rem;
+  --hl-h: 0.4rem;
+}
+
+.footer__body {
+  margin: 0;
+  position: absolute;
+  left: 0.78rem;
+  top: 3.03rem; /* page y 5985 */
+  font-size: 0.283rem;
+  font-weight: 400;
+  line-height: 0.352rem;
+  letter-spacing: var(--track-body);
+  z-index: 3;
+}
+
+.footer__logo {
+  position: absolute;
+  left: 0.7rem;
+  top: 6.48rem; /* page y 6330 */
+  width: 2.3rem;
+  height: 1.1rem;
+  z-index: 3;
+}
+
+/* ---- contact column, right ---- */
+.footer__contact {
+  position: absolute;
+  right: 0.83rem; /* page x 1283 */
+  top: 4.21rem;
+  width: 3.4rem;
+  text-align: right;
+  z-index: 3;
+}
+
+.footer__contact h3 {
+  margin: 0;
+  font-size: 0.338rem;
+  font-weight: 400;
+  line-height: 0.36rem;
+  letter-spacing: var(--track-body);
+}
+
+.footer__contact p {
+  margin: 0.06rem 0 0.19rem;
+  font-size: 0.155rem;
+  font-weight: 400;
+  line-height: 0.195rem;
+  letter-spacing: var(--track-body);
+}
+
+.footer__contact p:last-child {
+  margin-bottom: 0;
+}
+
+.footer__social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.05rem;
+}
+
+.footer__icon {
+  width: 0.14rem;
+  height: 0.14rem;
+  color: var(--white);
+}

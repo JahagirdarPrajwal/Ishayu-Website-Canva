@@ -1,0 +1,45 @@
+/* ---------- Section 3 — Make your better choice ---------- */
+
+.better {
+  height: 6.7rem; /* page y 1690 → 2360 */
+  background: var(--white);
+}
+
+.better__heading {
+  margin: 0;
+  position: absolute;
+  top: 0.12rem;
+  left: 2.64rem; /* "Make" starts at artboard x 271 */
+  font-size: 0.86rem;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.better__plain {
+  color: var(--blue-heading);
+  letter-spacing: var(--track-display);
+}
+
+/* band: x 662→1074, y 1724→1800 */
+.better__italic {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.755rem;
+  color: var(--ink);
+  margin-left: 0.28rem;
+  --hl-x: 0.24rem;
+  --hl-y: 0.22rem;
+  --hl-w: 4.12rem;
+  --hl-h: 0.76rem;
+}
+
+.better__strip {
+  position: absolute;
+  left: 0;
+  top: 1.57rem; /* page y 1847 */
+  width: 100%;
+  height: 5.13rem;
+  object-fit: cover;
+}

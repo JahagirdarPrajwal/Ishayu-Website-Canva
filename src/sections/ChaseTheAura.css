@@ -1,0 +1,168 @@
+/* ---------- Section 4 — chase the aura ---------- */
+
+.aura {
+  height: 18rem; /* page y 2360 → 4160 */
+  background: #4d7a28;
+}
+
+.aura .section__bg {
+  object-position: center center;
+}
+
+.aura__ie {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.66rem; /* page y 2426 */
+  width: 2.18rem;
+  height: 2.31rem;
+  z-index: 3;
+}
+
+/* ---- headline cluster, upper right ---- */
+.aura__headline {
+  position: absolute;
+  inset: 0;
+  color: var(--white);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.aura__chase {
+  position: absolute;
+  left: 8.78rem;
+  top: 1.88rem;
+  font-size: 0.673rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  white-space: nowrap;
+}
+
+/* band: x 858→1037, y 2627→2666 */
+.aura__aura {
+  position: absolute;
+  left: 8.58rem;
+  top: 2.3rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.5rem;
+  line-height: 1;
+  color: var(--ink);
+  --hl-x: 0rem;
+  --hl-y: -0.06rem;
+  --hl-w: 1.79rem;
+  --hl-h: 0.39rem;
+  text-align: center;
+  width: 1.79rem;
+}
+
+.aura__energy {
+  position: absolute;
+  left: 9.53rem;
+  top: 3.29rem;
+  font-size: 0.373rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--track-body);
+  white-space: nowrap;
+}
+
+/* ---- "find your game" copy ---- */
+.aura__find {
+  margin: 0;
+  position: absolute;
+  left: 2.69rem;
+  top: 3.7rem;
+  font-size: 0.283rem;
+  font-weight: 400;
+  line-height: 0.352rem;
+  letter-spacing: var(--track-body);
+  color: var(--white);
+  z-index: 3;
+}
+
+/* ---- game tiles ---- */
+.aura__games {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.aura__game {
+  position: absolute;
+  margin: 0;
+  top: 6.98rem; /* page y 3058 */
+  width: 1.68rem;
+}
+
+.aura__game img {
+  width: 100%;
+  height: 1.2rem;
+  object-fit: cover;
+  border-radius: 0.1rem;
+  border: 0.03rem solid #141414;
+  box-shadow: 0 0.04rem 0.1rem rgba(0, 0, 0, 0.35);
+}
+
+.aura__game figcaption {
+  margin-top: 0.09rem;
+  text-align: center;
+  font-size: 0.215rem;
+  font-weight: 500;
+  letter-spacing: var(--track-body);
+  color: var(--white);
+  white-space: nowrap;
+}
+
+/* ---- closing copy, lower right ---- */
+.aura__closing {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 12.73rem; /* right edge at artboard x 1273 */
+  text-align: right;
+  color: var(--white);
+  z-index: 3;
+}
+
+.aura__closing-line1 {
+  position: absolute;
+  right: 0;
+  top: 14.24rem;
+  font-size: 0.55rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  white-space: nowrap;
+}
+
+/* band: x 992→1273, y 3849→3888 */
+.aura__closing-line2 {
+  position: absolute;
+  right: 0;
+  top: 14.41rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.52rem;
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+  --hl-x: 0.03rem;
+  --hl-y: 0.07rem;
+  --hl-w: 2.81rem;
+  --hl-h: 0.39rem;
+}
+
+.aura__closing-body {
+  margin: 0;
+  position: absolute;
+  right: 0;
+  top: 15.52rem;
+  font-size: 0.283rem;
+  font-weight: 400;
+  line-height: 0.352rem;
+  letter-spacing: var(--track-body);
+  white-space: nowrap;
+}

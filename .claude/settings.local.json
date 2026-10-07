@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\split.py\" 2>&1)",
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\split.py\" --debug 2>&1 | Select-Object -Last 2)",
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\split.py\" --debug 2>&1 | Select-Object -Last 11)",
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\split.py\" --debug 2>&1 | Select-Object -Last 10)",
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\split.py\" --debug 2>&1 | Select-Object -Last 18)",
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\diag.py\" 2>&1)",
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\split.py\" --debug 2>&1 | Select-Object -Last 20)",
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\split.py\" --debug 2>&1 | Select-Object -Last 17)",
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\split.py\" --write 2>&1 | Select-Object -Last 10)",
+      "PowerShell(cd D:\\\\IshayuWebsite; python -I \"$env:TEMP\\\\claude\\\\D--IshayuWebsite\\\\4fd01817-fc9f-469b-a3b9-25212f748fb1\\\\scratchpad\\\\reassemble.py\" 2>&1)"
+    ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  }
+}

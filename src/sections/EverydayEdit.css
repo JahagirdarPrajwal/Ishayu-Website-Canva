@@ -1,0 +1,212 @@
+/* ---------- Section 2 — the everyday edit ---------- */
+
+.edit {
+  height: 9.22rem; /* page y 768 → 1690 */
+  background: var(--white);
+}
+
+/* ---- shelf ----
+   Was one flat composite (shelf-objects.png). It is now three rails and six
+   objects, split out of that same export, so each can move on its own
+   (CLAUDE.md §8.4). The box it occupies is unchanged.
+
+   Children are placed as a share of the 700 x 660 block rather than in rem:
+   one set of coordinates then serves both the artboard and the mobile
+   reflow, where the block is simply narrower. The offsets arrive as custom
+   properties because the mobile stylesheet resets `width` with !important,
+   which an inline style cannot win against — a custom property it never
+   touches. */
+.edit__shelf {
+  position: absolute;
+  left: 0;
+  top: 0.52rem; /* page y 820 */
+  width: 7rem;
+  height: 6.6rem;
+}
+
+.edit__shelf > * {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+}
+
+.edit__rail {
+  height: auto;
+  z-index: 1;
+}
+
+.edit__obj-float {
+  width: 100%;
+  cursor: grab;
+  will-change: transform;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.edit__obj-float:active {
+  cursor: grabbing;
+}
+
+.edit__obj-float img {
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+/* ---- heading ---- */
+.edit__heading {
+  margin: 0;
+  position: absolute;
+  left: 7.64rem;
+  top: 0.8rem;
+  font-size: 0.64rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  white-space: nowrap;
+}
+
+/* "edit" band: x 1114→1257, y 881→916 */
+.edit__heading .hl {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.74rem;
+  letter-spacing: 0;
+  margin-left: 0.04rem;
+  --hl-x: 0.08rem;
+  --hl-y: 0.33rem;
+  --hl-w: 1.43rem;
+  --hl-h: 0.35rem;
+}
+
+/* ---- body copy ----
+   One run per line so the type-on clip has each line's own box to work
+   against. The runs are a single unbroken inline-block each, so the text is
+   never split and the lines measure exactly as they did with <br>. */
+.edit__body {
+  margin: 0;
+  position: absolute;
+  left: 7.64rem;
+  top: 1.9rem;
+  font-size: 0.283rem;
+  font-weight: 400;
+  line-height: 0.352rem;
+  letter-spacing: var(--track-body);
+}
+
+.edit__body-line {
+  display: block;
+}
+
+.edit__body-run {
+  display: inline-block;
+}
+
+/* ---- notes card ----
+   The card art is now chrome only (note-card.png); the type and the
+   selection are real DOM so they can be typed on and swept, which is what
+   the spec asks for. Everything inside is sized in cqw against the card's
+   own width — 100cqw = the 412 design px the card was measured at — so one
+   set of numbers holds at any card size, including the mobile reflow where
+   the card is no longer exactly 4.12rem wide. */
+.edit__note {
+  position: absolute;
+  left: 8.18rem;
+  top: 4.12rem;
+  width: 4.12rem;
+  height: 3.25rem;
+  container-type: inline-size;
+}
+
+.edit__note-card {
+  width: 100%;
+  height: 100%;
+}
+
+.edit__note-title,
+.edit__note-body {
+  position: absolute;
+  margin: 0;
+  color: #000;
+  font-weight: 400;
+  letter-spacing: -0.006em;
+}
+
+/* Sizes are tuned so Archivo reproduces the line widths measured off the
+   flattened card: the four body lines ran 172 / 116 / 164 / 164 card px and
+   the selection band 98. */
+.edit__note-title {
+  left: 7.767cqw; /* card x 32 */
+  top: 12.864cqw; /* card y 53 */
+  font-size: 4.92cqw;
+}
+
+.edit__note-body {
+  left: 8.738cqw; /* card x 36 */
+  top: 26.94cqw;
+  font-size: 4.24cqw;
+  line-height: 5.34cqw; /* the card's 22px line pitch */
+}
+
+.edit__note-line {
+  display: block;
+}
+
+.edit__note-run {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* the iOS-style selection on "reminder": a tan wash with a bar-and-dot
+   handle at each end. --sel-sweep and --sel-handle both default to the
+   resting value, so with no inline override this renders exactly as the
+   flattened card did. */
+.edit__note-mark {
+  position: relative;
+  display: inline-block;
+  padding: 0 1.456cqw; /* the band runs 6px wider than the word each side */
+  line-height: 8.981cqw; /* band height, card 37px */
+  color: #32341f;
+  font-weight: 700;
+  background-image: linear-gradient(#f0d7a3, #f0d7a3);
+  background-repeat: no-repeat;
+  background-size: var(--sel-sweep, 100%) 100%;
+}
+
+.edit__note-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.728cqw; /* 3px */
+  background: #e7b548;
+  opacity: var(--sel-handle, 1);
+}
+
+.edit__note-handle::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 2.67cqw; /* 11px dot */
+  height: 2.67cqw;
+  margin-left: -1.335cqw;
+  border-radius: 50%;
+  background: #e7b548;
+}
+
+.edit__note-handle--start {
+  left: -0.364cqw;
+}
+
+.edit__note-handle--start::before {
+  top: -2.0cqw;
+}
+
+.edit__note-handle--end {
+  right: -0.364cqw;
+}
+
+.edit__note-handle--end::before {
+  bottom: -2.0cqw;
+}

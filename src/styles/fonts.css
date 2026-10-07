@@ -1,0 +1,17 @@
+/* Self-hosted webfonts (bundled by Vite — no external requests at runtime).
+
+   The Canva original is set in a Helvetica-family grotesque. Archivo is the
+   closest freely-licensed match available; a small negative letter-spacing on
+   each type style closes the remaining width difference so line lengths match
+   the export. The italic display face is Playfair Display. */
+
+@import '@fontsource/archivo/400.css';
+@import '@fontsource/archivo/500.css';
+@import '@fontsource/archivo/600.css';
+@import '@fontsource/archivo/700.css';
+@import '@fontsource/archivo/400-italic.css';
+
+@import '@fontsource/playfair-display/400-italic.css';
+@import '@fontsource/playfair-display/500-italic.css';
+@import '@fontsource/playfair-display/600-italic.css';
+@import '@fontsource/playfair-display/700-italic.css';
