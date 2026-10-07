@@ -94,16 +94,24 @@ export function armTypeReveal(run, caret) {
 }
 
 export function clearTypeReveal(run, caret) {
-  if (run) run.style.clipPath = ''
+  if (run) {
+    run.style.clipPath = ''
+    run.style.filter = ''
+  }
   if (caret) {
     caret.style.opacity = ''
     caret.style.transform = ''
   }
 }
 
+/* `blur` is additive and opt-in (rem, default 0 — every existing call site
+   is unaffected). The footer is the one place that pairs the clip reveal
+   with a blur-to-sharp focus pull, so rather than fork a second typing
+   system the one helper every other section already uses just grew an
+   optional knob. */
 export function addTypeReveal(
   tl,
-  { run, caret, position, speed = 0.023, minDuration = 0.45 },
+  { run, caret, position, speed = 0.023, minDuration = 0.45, blur = 0 },
 ) {
   if (!run) return 0
 
@@ -115,6 +123,7 @@ export function addTypeReveal(
     // quantise to whole characters so it reads as typing, not as a wipe
     const q = Math.min(1, Math.ceil(state.p * chars) / chars)
     run.style.clipPath = `inset(-30% ${(1 - q) * 100}% -30% -2%)`
+    if (blur > 0) run.style.filter = `blur(${(1 - q) * blur}rem)`
     if (caret) {
       const w = run.offsetWidth
       caret.style.transform = `translateX(${q * w - w / 2}px)`

@@ -242,3 +242,67 @@
 .snack__note-list .springcheck__label {
   color: #1a1a1a;
 }
+
+/* ---- checklist reminder ----
+   Position, bubble shape and the two-line wrap are measured off the Canva
+   reference ("little reminder.png"), calibrated against the photograph
+   (also visible in that reference — slay.png's title bar is 639px wide
+   there and 468px live, a ~0.732 scale factor). That puts the bubble just
+   under the photo and left of the notes card — not below the note, beside
+   it — with its tail (flipped — see the JSX note) pointing right at it.
+   Typography matches .snack__note-title's own bold-label treatment rather
+   than inventing a new style. */
+.snack__reminder {
+  position: absolute;
+  left: 7.1rem;
+  top: 6.7rem;
+  z-index: 3;
+  background: #f8f5f0;
+  border-radius: 0.06rem;
+  padding: 0.09rem 0.12rem 0.1rem;
+  box-shadow: 0 0.04rem 0.12rem rgba(0, 0, 0, 0.3);
+}
+
+.snack__reminder-head {
+  margin: 0;
+  font-size: 0.15rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: var(--track-body);
+  color: #1a1a1a;
+  white-space: nowrap;
+}
+
+.snack__reminder-body {
+  margin: 0.045rem 0 0;
+  font-size: 0.135rem;
+  font-weight: 400;
+  line-height: 0.165rem;
+  letter-spacing: var(--track-body);
+  color: #1a1a1a;
+}
+
+.snack__reminder-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.snack__reminder-run {
+  display: inline-block;
+}
+
+/* the tail: a simple CSS triangle. In the reference it hangs off the
+   bottom-left corner pointing down-left, away from the Notes card;
+   scaleX(-1) flips only the tail (not the text) so it points down-right,
+   toward the card instead. */
+.snack__reminder-tail {
+  position: absolute;
+  left: 0.16rem;
+  bottom: -0.085rem;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0.09rem 0.11rem 0 0;
+  border-color: #f8f5f0 transparent transparent transparent;
+  transform: scaleX(-1);
+}

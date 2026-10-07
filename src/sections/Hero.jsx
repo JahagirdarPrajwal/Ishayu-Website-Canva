@@ -64,9 +64,14 @@ export default function Hero({ started = false }) {
            With reduced motion everything simply renders at rest. */
         if (!ctx.conditions.desktop || !ctx.conditions.motionOK) return undefined
 
-        const { band, selection, run1, run2, caret1, caret2, cursor } = refs.current
+        const { band, selection, run1, run2, caret1, caret2, cursor, navLogo } = refs.current
         const cards = gsap.utils.toArray('.hero__card', el)
         const pills = gsap.utils.toArray('.hero__pill', el)
+        /* The wordmark drops in with the pills rather than getting a
+           ScrollTrigger of its own — it is just one more item in the same
+           stagger group, first in the array so it leads the row (it sits
+           left of all of them). */
+        const navEntrance = [navLogo, ...pills].filter(Boolean)
 
         /* ---- arm: hold everything at its entry state before first paint,
            so nothing flashes at its resting value under the loader ---- */
@@ -76,7 +81,7 @@ export default function Hero({ started = false }) {
         armTypeReveal(run1, caret1)
         armTypeReveal(run2, caret2)
         gsap.set(cards, { opacity: 0 })
-        gsap.set(pills, { opacity: 0 })
+        gsap.set(navEntrance, { opacity: 0 })
         gsap.set(cursor, { opacity: 0 })
 
         const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } })
@@ -85,11 +90,11 @@ export default function Hero({ started = false }) {
            two movements read as one gesture rather than a handover. */
         tl.from(el, { yPercent: 2.2, duration: 0.95, ease: 'power2.out' }, 0)
 
-        /* ---- nav ----
-           fromTo, not from: the pills are armed at opacity 0 above, and a
+        /* ---- nav + wordmark ----
+           fromTo, not from: these are armed at opacity 0 above, and a
            `from` tween would read that as the destination too. */
         tl.fromTo(
-          pills,
+          navEntrance,
           { yPercent: -180, opacity: 0 },
           { yPercent: 0, opacity: 1, duration: 0.55, stagger: 0.055 },
           0.55,
@@ -211,6 +216,13 @@ export default function Hero({ started = false }) {
   return (
     <section className="section hero" ref={root}>
       <img className="section__bg" src="/assets/hero/hero-bg.jpg" alt="" />
+
+      {/* The real wordmark asset (CLAUDE.md §6), not baked into the export —
+          the Canva artboard had no logo in this corner, so this is new
+          branding added to the live site rather than a reproduction of
+          anything in 1.png. Same file the footer used to render; it sits
+          here instead now (see the correction note in Footer.jsx). */}
+      <img className="hero__logo" src="/assets/footer/ishayu-logo.png" alt="Ishayu" ref={set('navLogo')} />
 
       <nav className="hero__nav">
         {NAV.map(({ label, x, w, active }) => (

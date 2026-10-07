@@ -24,11 +24,20 @@
   /* The shelf and the notes card carry their own internal coordinate space
      (shares of their own box, not of the artboard), so they survive the
      reflow by simply being narrower. Releasing their children here would
-     drop nine absolutely positioned pieces into the flow. */
+     drop nine absolutely positioned pieces into the flow.
+
+     .hero__logo is excluded for a different reason: it is a single small
+     image with its own explicit mobile position/size a few lines down. Left
+     in, this rule's width:auto!important (its specificity beats a lone
+     class) overrides that size with the asset's raw intrinsic 212x90 and
+     drops it into normal flow above the nav — confirmed via the CDP
+     inspector, not guessed. */
   .section
     *:not(.section__bg):not(.hl):not(.hero__selection):not(svg):not(svg *):not(
       .edit__shelf *
-    ):not(.edit__note *):not(.better__row *):not(.snack__note *):not(.insta__rail *) {
+    ):not(.edit__note *):not(.better__row *):not(.snack__note *):not(.insta__rail *):not(
+      .hero__logo
+    ) {
     position: relative !important;
     inset: auto !important;
     width: auto !important;
@@ -42,7 +51,9 @@
     z-index: 0;
   }
 
-  .section img:not(.section__bg) {
+  /* .hero__logo excluded for the same reason as above: it has its own
+     explicit mobile width a few lines down, not a full-bleed one. */
+  .section img:not(.section__bg):not(.hero__logo) {
     width: 100% !important;
     height: auto !important;
     object-fit: contain !important;
@@ -105,6 +116,15 @@
   .hero {
     padding-top: 1.05rem;
     padding-bottom: 0.3rem;
+  }
+
+  /* small, top-left, out of the nav's way. Not part of the full mobile pass
+     — just scaled down and clear of overlap for now, per the correction
+     brief. The nav is nudged down (was 0.18rem) to leave it room. */
+  .hero__logo {
+    width: 0.78rem !important;
+    left: 0.14rem !important;
+    top: 0.12rem !important;
   }
 
   .hero__nav {

@@ -56,13 +56,46 @@
   z-index: 3;
 }
 
+/* one run per line, so the type-on clip has each visual line's own box to
+   work against — the same pattern EverydayEdit and Snack use. Block spans
+   stack identically to the <br/>s they replace; the text and line breaks
+   are unchanged. */
+.footer__line {
+  display: block;
+}
+
+.footer__run {
+  display: inline-block;
+}
+
+/* the reveal clip would otherwise clobber this run's own inline-flex (the
+   icon needs to sit beside the handle, not stack under it) */
+.footer__run.footer__social {
+  display: inline-flex;
+}
+
+/* ishayu-logo.png replaces the flattened, keyed footer/logo.png (CLAUDE.md
+   §6): real alpha, the registered-trademark mark, and an aspect ratio
+   (212:90) that matches the export almost exactly, measured off the ink
+   itself rather than the old asset's padded box. aspect-ratio keeps it
+   proportioned at any width instead of a fixed height. Position confirmed
+   by compositing this exact box against footer-bg.jpg and checking the
+   wordmark and the (R) mark land on their baked counterparts. */
 .footer__logo {
   position: absolute;
-  left: 0.7rem;
-  top: 6.48rem; /* page y 6330 */
-  width: 2.3rem;
-  height: 1.1rem;
+  left: 0.76rem;
+  top: 6.73rem; /* page y 6355, measured off the export */
+  width: 2.14rem;
+  aspect-ratio: 212 / 90;
   z-index: 3;
+  /* The underlying baked mark is a touch soft (reconstruction residue, not
+     CSS — see the note in Footer.jsx). Rather than fight that last sliver
+     of softness, this gives the logo its own small, matching dark-green
+     glow, so whatever peeks out from underneath reads as the logo's own
+     ambient shadow on the grass instead of a second, misaligned mark. Not a
+     blur on the logo itself — the source pixels stay exactly as crisp as
+     the asset. */
+  filter: drop-shadow(0 0.015rem 0.05rem rgba(18, 46, 8, 0.5));
 }
 
 /* ---- contact column, right ---- */
@@ -99,6 +132,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.05rem;
+}
+
+/* the mail/LinkedIn/Instagram runs are real <a> elements now; this is only
+   so they don't pick up the browser's default link colour/underline — no
+   other visual change */
+.footer__contact a {
+  color: inherit;
+  text-decoration: none;
 }
 
 .footer__icon {

@@ -210,3 +210,50 @@
 .edit__note-handle--end::before {
   bottom: -2.0cqw;
 }
+
+/* ---- the Moringa callout ----
+   Position, size and the one-continuous-line composition are measured off
+   the Canva reference ("rearrange your day.png"), calibrated against "the
+   everyday edit" (visible in the same reference) so the ratio carries over
+   correctly regardless of the mockup's own canvas size: that heading is
+   463.5px wide live and 655px in the mockup, giving a scale factor of
+   ~0.708, which converts the new line's measured mockup box (left 56, top
+   31, width 899 at mockup scale) to the values below. Sits above the shelf,
+   not below the note — the shelf's own top (0.52rem) is the next thing
+   under it. */
+.edit__priority-line {
+  margin: 0;
+  position: absolute;
+  left: 0.49rem;
+  top: 0.08rem;
+  font-size: 0.34rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  white-space: nowrap;
+}
+
+/* band under "Your Day!" — width tuned against the rendered run, same
+   convention as every other .hl instance on the site */
+.edit__priority-band {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 0.39rem;
+  letter-spacing: 0;
+  --hl-x: 0.03rem;
+  --hl-y: 0.15rem;
+  --hl-w: 1.78rem;
+  --hl-h: 0.19rem;
+}
+
+/* "Protein stays a priority." continues on the same line, at the site's
+   standard paragraph scale rather than the heading's — this is the
+   TextType/addTypeReveal paragraph half of the pair, not a second heading */
+.edit__priority-run {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 0.245rem;
+  font-weight: 400;
+  letter-spacing: var(--track-body);
+}

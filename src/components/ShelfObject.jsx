@@ -29,8 +29,13 @@ const DRIFT = 14 / 700
 const LEG_MIN = 2.9
 const LEG_VAR = 2.6
 
+/* the spring the priority object returns home on — settled, not bouncy,
+   since this is a correction ("you can rearrange your day, but Ishayu
+   always comes back to #1"), not a flourish */
+const SPRING_HOME = { type: 'spring', stiffness: 170, damping: 23, mass: 0.9 }
+
 export default function ShelfObject({
-  src, alt = '', x, y, w, z, shelfRef, interactive = true,
+  src, alt = '', x, y, w, z, shelfRef, interactive = true, returnBelow,
 }) {
   const ref = useRef(null)
   const mx = useMotionValue(0)
@@ -103,6 +108,35 @@ export default function ShelfObject({
 
   const onRelease = () => {
     held.current = false
+
+    /* `returnBelow` is only ever set on the one priority object (the
+       Moringa bar) — every other ShelfObject gets `undefined` here and runs
+       the exact same release behaviour as before this was added. */
+    if (returnBelow != null && shelfRef.current) {
+      const thresholdPx = shelfRef.current.clientHeight * returnBelow
+      if (my.get() > thresholdPx) {
+        // dropped on a lower rack — spring both axes back to its designated
+        // top-rack position, and only start drifting again once it has
+        // actually arrived there, so the drift never fights the spring
+        legs.current.x?.stop()
+        legs.current.y?.stop()
+        home.current = { x: 0, y: 0 }
+        const arrived = { x: false, y: false }
+        const onSettle = (axis) => {
+          arrived[axis] = true
+          if (arrived.x && arrived.y && !held.current) {
+            leg('x')
+            leg('y')
+          }
+        }
+        legs.current.x = animate(mx, 0, { ...SPRING_HOME, onComplete: () => onSettle('x') })
+        legs.current.y = animate(my, 0, { ...SPRING_HOME, onComplete: () => onSettle('y') })
+        return
+      }
+      // released on the top rack itself — falls through to the normal
+      // "settle wherever it was put down" behaviour below
+    }
+
     // resume drifting around wherever it was put down
     home.current = { x: mx.get(), y: my.get() }
     leg('x')

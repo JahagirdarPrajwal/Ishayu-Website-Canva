@@ -1,4 +1,17 @@
+import { useLayoutEffect, useRef, useState } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import BlurText from '../components/BlurText.jsx'
+import {
+  DESKTOP,
+  addBandWipe,
+  addTypeReveal,
+  armTypeReveal,
+  clearTypeReveal,
+} from '../anim/helpers.js'
 import './Footer.css'
+
+gsap.registerPlugin(ScrollTrigger)
 
 function LinkedInIcon() {
   return (
@@ -21,58 +34,186 @@ function InstagramIcon() {
   )
 }
 
+/* The footer is the end of the page — "no more scrolling" (master spec) —
+   so its text reveal runs quicker than the rest of the site's established
+   0.023 s/char, and each run carries a short blur-to-sharp pull alongside
+   the clip reveal ("that blur thing behind those texts"). Both are local
+   overrides passed into the one shared addTypeReveal helper; nothing about
+   how Parts 1-6 call it changes. */
+const FAST_SPEED = 0.014
+const FAST_MIN = 0.22
+const TEXT_BLUR = 0.1 // rem
+
+const BODY = [
+  'Whether you want to ask',
+  'us something, work with',
+  'us, stock ISHAYU, or',
+  'simply say hi , we’d love to',
+  'hear from you.',
+]
+
+const ADDRESS = ['No.66, 8th ‘A’ Main, BTM 1st', 'Stage, Bangalore – 560029,', 'Karnataka, India']
+const PHONE = ['+91 80 35893150 / 35893151', '+91 9686623006']
+
 export default function Footer() {
+  const root = useRef(null)
+  const refs = useRef({})
+  const [headingIn, setHeadingIn] = useState(false)
+
+  const set = (name) => (node) => {
+    refs.current[name] = node
+  }
+
+  useLayoutEffect(() => {
+    const el = root.current
+    if (!el) return undefined
+
+    const mm = gsap.matchMedia()
+
+    mm.add(
+      { desktop: DESKTOP, motionOK: '(prefers-reduced-motion: no-preference)' },
+      (ctx) => {
+        /* Below the breakpoint responsive.css reflows the artboard into a
+           column, and with reduced motion everything renders at rest
+           (CLAUDE.md §8.12) — same convention as every other section. */
+        if (!ctx.conditions.desktop || !ctx.conditions.motionOK) {
+          setHeadingIn(true)
+          return undefined
+        }
+
+        const r = refs.current
+        const runs = gsap.utils.toArray('.footer__run', el)
+        runs.forEach((run) => armTypeReveal(run))
+
+        /* One entry trigger, not a scrub — this is the last section and the
+           master spec is explicit that nothing here waits on further
+           scrolling. The words land, the marker is drawn through "with us"
+           at the page's shared stroke rate, then every other block of text
+           types on fast with the logo popping in alongside it. */
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: el, start: 'top 82%' },
+          onStart: () => setHeadingIn(true),
+        })
+        tl.to({}, { duration: 0.95 })
+        addBandWipe(tl, r.band, 0.95)
+
+        let at = 1.7 // past the heading settle + the short "with us" band
+        runs.forEach((run) => {
+          at += addTypeReveal(
+            tl,
+            { run, position: at, speed: FAST_SPEED, minDuration: FAST_MIN, blur: TEXT_BLUR },
+          ) + 0.05
+        })
+
+        return () => {
+          runs.forEach((run) => clearTypeReveal(run))
+          r.band?.style.removeProperty('--hl-w')
+        }
+      },
+    )
+
+    return () => mm.revert()
+  }, [])
+
   return (
-    <footer className="section footer">
+    <footer className="section footer" ref={root}>
       <img className="section__bg" src="/assets/footer/footer-bg.jpg" alt="" />
 
+      {/* The band is the parent of its BlurText, not a child — BlurText
+          remounts its subtree once it settles, which would drop the inline
+          --hl-w the wipe is driving (the bug already fixed in Parts 2-3). */}
       <h2 className="footer__heading">
-        <span className="footer__line1">talk snacks</span>
-        <span className="hl footer__line2">with us</span>
+        <span className="footer__line1">
+          <BlurText play={headingIn} delay={130} stepDuration={0.4}>
+            talk snacks
+          </BlurText>
+        </span>
+        <span className="hl footer__line2" ref={set('band')}>
+          <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={2}>
+            with us
+          </BlurText>
+        </span>
       </h2>
 
       <p className="footer__body">
-        Whether you want to ask
-        <br />
-        us something, work with
-        <br />
-        us, stock ISHAYU, or
-        <br />
-        simply say hi , we’d love to
-        <br />
-        hear from you.
+        {BODY.map((line) => (
+          <span className="footer__line" key={line}>
+            <span className="footer__run">{line}</span>
+          </span>
+        ))}
       </p>
 
-      <img className="footer__logo" src="/assets/footer/logo.png" alt="Ishayu" />
+      {/* footer-bg.jpg carries the Ishayu wordmark baked into its bottom-left
+          corner, but softened — reconstruction residue from when it was
+          painted out and back in (CLAUDE.md §6). It is not CSS; confirmed by
+          searching every filter/blur rule in the project and by an edge-
+          sharpness measurement of the region (see the investigation notes).
+          The clean transparent asset is laid exactly over it — position
+          cross-checked by compositing the two and visually confirming the
+          wordmark and the (R) mark land on top of their baked counterparts,
+          not beside them — so what's underneath reads as a soft ambient
+          shadow the logo is sitting on, not a second, misaligned logo. */}
+      <img className="footer__logo" src="/assets/footer/ishayu-logo.png" alt="Ishayu" />
 
       <div className="footer__contact">
-        <h3>locate us</h3>
+        <h3>
+          <span className="footer__run">locate us</span>
+        </h3>
         <p>
-          No.66, 8th ‘A’ Main, BTM 1st
-          <br />
-          Stage, Bangalore – 560029,
-          <br />
-          Karnataka, India
+          {ADDRESS.map((line) => (
+            <span className="footer__line" key={line}>
+              <span className="footer__run">{line}</span>
+            </span>
+          ))}
         </p>
 
-        <h3>give us a call</h3>
+        <h3>
+          <span className="footer__run">give us a call</span>
+        </h3>
         <p>
-          +91 80 35893150 / 35893151
-          <br />
-          +91 9686623006
+          {PHONE.map((line) => (
+            <span className="footer__line" key={line}>
+              <span className="footer__run">{line}</span>
+            </span>
+          ))}
         </p>
 
-        <h3>mail</h3>
-        <p>reachus@ishayu.in</p>
-
-        <h3>socials</h3>
+        <h3>
+          <span className="footer__run">mail</span>
+        </h3>
         <p>
-          <span className="footer__social">
-            @ishayu <LinkedInIcon />
+          <span className="footer__line">
+            <a className="footer__run" href="mailto:reachus@ishayu.in">
+              reachus@ishayu.in
+            </a>
           </span>
-          <br />
-          <span className="footer__social">
-            @ishayu_vittarthaa <InstagramIcon />
+        </p>
+
+        <h3>
+          <span className="footer__run">socials</span>
+        </h3>
+        <p>
+          <span className="footer__line">
+            <a
+              className="footer__run footer__social"
+              href="https://www.linkedin.com/company/ishayu/?viewAsMember=true"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ishayu on LinkedIn"
+            >
+              @ishayu <LinkedInIcon />
+            </a>
+          </span>
+          <span className="footer__line">
+            <a
+              className="footer__run footer__social"
+              href="https://www.instagram.com/ishayu_vittarthaa/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ishayu on Instagram"
+            >
+              @ishayu_vittarthaa <InstagramIcon />
+            </a>
           </span>
         </p>
       </div>

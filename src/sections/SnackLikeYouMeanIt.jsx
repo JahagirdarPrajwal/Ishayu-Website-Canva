@@ -40,6 +40,14 @@ const BODY = [
    was going past before it could be read. */
 const TYPE_SPEED = 0.034
 
+/* A quiet editorial aside explaining the checklist is interactive — sits
+   below the photograph and left of the notes card, same spot and the same
+   two-line wrap as the "little reminder.png" Canva reference. The bubble
+   there has its tail pointing away from the note (down-left); this is
+   mirrored so the tail points at it instead. */
+const REMINDER_HEAD = 'A little reminder:'
+const REMINDER_BODY = ['tick these off', 'as you go.']
+
 /* The five rows on the notes card, read off the export. */
 const CHECKS = [
   'Choosing better, not perfect.',
@@ -56,6 +64,7 @@ export default function SnackLikeYouMeanIt() {
   const [ctaIn, setCtaIn] = useState(false)
   const [photoIn, setPhotoIn] = useState(false)
   const [checks, setChecks] = useState(() => CHECKS.map(() => false))
+  const [reminderIn, setReminderIn] = useState(false)
 
   const set = (name) => (node) => {
     refs.current[name] = node
@@ -75,14 +84,17 @@ export default function SnackLikeYouMeanIt() {
           setCtaIn(true)
           setPhotoIn(true)
           setChecks(CHECKS.map(() => true))
+          setReminderIn(true)
           return undefined
         }
 
         const r = refs.current
         const bodyRuns = gsap.utils.toArray('.snack__body-run', el)
         const noteRuns = gsap.utils.toArray('.snack__note-run', el)
+        const reminderRuns = gsap.utils.toArray('.snack__reminder-run', el)
         bodyRuns.forEach((run) => armTypeReveal(run))
         noteRuns.forEach((run) => armTypeReveal(run))
+        reminderRuns.forEach((run) => armTypeReveal(run))
         armSelection(r.noteMark)
 
         /* 1. the heading lands, then the marker goes through "mean it" */
@@ -135,6 +147,20 @@ export default function SnackLikeYouMeanIt() {
           scrollTrigger: { trigger: el.querySelector('.snack__folder'), start: 'top 85%' },
         })
 
+        /* 4b. the reminder annotation — its own timeline, same trigger point
+           as the folder pop above (left completely untouched), timed to
+           start once that entrance has actually finished: two folders,
+           0.14s apart, 0.9s each -> last one lands at 1.04s, plus a beat. */
+        const reminder = gsap.timeline({
+          scrollTrigger: { trigger: el.querySelector('.snack__folder'), start: 'top 85%' },
+        })
+        reminder.to({}, { duration: 1.3 })
+        reminder.call(() => setReminderIn(true))
+        let rat = 1.3 + 0.85 // let "A little reminder:" land before typing starts
+        reminderRuns.forEach((run) => {
+          rat += addTypeReveal(reminder, { run, position: rat }) + 0.06
+        })
+
         /* 5. the notes card arrives, its title and rows type on, the title is
            then selected, and finally the five boxes tick themselves off */
         const note = gsap.timeline({
@@ -163,6 +189,7 @@ export default function SnackLikeYouMeanIt() {
         return () => {
           bodyRuns.forEach((run) => clearTypeReveal(run))
           noteRuns.forEach((run) => clearTypeReveal(run))
+          reminderRuns.forEach((run) => clearTypeReveal(run))
           clearSelection(r.noteMark)
           r.band?.style.removeProperty('--hl-w')
         }
@@ -290,6 +317,28 @@ export default function SnackLikeYouMeanIt() {
             </li>
           ))}
         </ul>
+      </div>
+
+      {/* The "little reminder.png" bubble, mirrored: in the reference its
+          tail points down-left, away from the Notes card. This is flipped
+          so the tail points at it instead (left-to-right scaleX(-1) on the
+          tail only — the text stays unmirrored). Typography matches the
+          note card's own title treatment (bold label, regular line under
+          it) rather than a new style. */}
+      <div className="snack__reminder">
+        <p className="snack__reminder-head">
+          <BlurText play={reminderIn} delay={120} stepDuration={0.35}>
+            {REMINDER_HEAD}
+          </BlurText>
+        </p>
+        <p className="snack__reminder-body">
+          {REMINDER_BODY.map((line) => (
+            <span className="snack__reminder-line" key={line}>
+              <span className="snack__reminder-run">{line}</span>
+            </span>
+          ))}
+        </p>
+        <i className="snack__reminder-tail" aria-hidden="true" />
       </div>
     </section>
   )

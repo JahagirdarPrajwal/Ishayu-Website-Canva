@@ -46,7 +46,35 @@ const OBJECTS = [
   { key: 'watch', x: 271, y: 268, w: 94, z: 3, rail: 1, alt: 'watch' },
   { key: 'tumbler', x: 91, y: 391, w: 109, z: 2, rail: 2, alt: 'tumbler' },
   { key: 'laptop', x: 439, y: 482, w: 231, z: 2, rail: 2, alt: 'laptop' },
+  /* The Moringa bar: the one object on the shelf that is always your top
+     priority. It sits on rail 0 in the gap between the headphones and the
+     keys, and carries `priority` — the only thing that makes it behave
+     differently from the six objects above (see ShelfObject's `returnBelow`
+     prop). Everything else about it — entrance, drift, drag — is the exact
+     same mechanism, unchanged. */
+  {
+    key: 'moringa',
+    x: 280,
+    y: 95,
+    w: 180,
+    z: 2,
+    rail: 0,
+    alt: 'Ishayu Moringa energy bar',
+    priority: true,
+  },
 ]
+
+/* How far below its home position (as a share of the shelf's live height)
+   the priority object can be dropped before it is no longer "on the top
+   rail". Set to the midpoint between rail 0 and rail 1 in the same design-px
+   space the rest of this file uses (RAILS / SHELF_H), measured from the
+   object's own home y rather than from the rail itself, since that is what
+   ShelfObject actually compares against a live drag offset. */
+const PRIORITY_RETURN_BELOW = (() => {
+  const midRail01 = (RAILS[0] + RAILS[1]) / 2
+  const home = OBJECTS.find((o) => o.priority).y
+  return (midRail01 - home) / SHELF_H
+})()
 
 const BODY = [
   'phone. keys. headphones. ishayu.',
@@ -103,6 +131,7 @@ export default function EverydayEdit() {
         /* ---- arm everything that is revealed rather than tweened ---- */
         bodyRuns.forEach((run) => armTypeReveal(run))
         noteRuns.forEach((run) => armTypeReveal(run))
+        armTypeReveal(r.priorityRun)
         armSelection(r.noteMark)
 
         /* ---- 1 & 2. the three rails arrive from the left, one behind the
@@ -138,13 +167,20 @@ export default function EverydayEdit() {
         })
         shelfTl.call(() => setObjectsIn(true))
 
-        /* ---- 3. heading, then the marker through "edit" ---- */
+        /* ---- 3. heading, then the marker through "edit" ----
+           "REARRANGE Your Day! Protein stays a priority." rides the exact
+           same timeline and the exact same `headingIn` flag as "the everyday
+           edit" — it is not a separate entrance, it is the same one. Both
+           BlurText headings play together, both bands wipe together, then
+           the Moringa line types on right after. */
         const head = gsap.timeline({
           scrollTrigger: { trigger: r.heading, start: 'top 85%' },
           onStart: () => setHeadingIn(true),
         })
         head.to({}, { duration: 0.95 })        // let the words land first
         addBandWipe(head, r.band, 0.95)
+        addBandWipe(head, r.priorityBand, 0.95)
+        addTypeReveal(head, { run: r.priorityRun, position: 1.55 })
 
         /* ---- 4. body copy, a line at a time ---- */
         const body = gsap.timeline({
@@ -178,8 +214,10 @@ export default function EverydayEdit() {
         return () => {
           bodyRuns.forEach((run) => clearTypeReveal(run))
           noteRuns.forEach((run) => clearTypeReveal(run))
+          clearTypeReveal(r.priorityRun)
           clearSelection(r.noteMark)
           r.band?.style.removeProperty('--hl-w')
+          r.priorityBand?.style.removeProperty('--hl-w')
         }
       },
     )
@@ -199,7 +237,7 @@ export default function EverydayEdit() {
             style={{ '--x': '0%', '--y': pc(y, SHELF_H), '--w': pc(RAIL_W, SHELF_W) }}
           />
         ))}
-        {OBJECTS.map(({ key, x, y, w, z, alt }) => (
+        {OBJECTS.map(({ key, x, y, w, z, alt, priority }) => (
           <ShelfObject
             key={key}
             src={`/assets/edit/obj-${key}.png`}
@@ -210,6 +248,7 @@ export default function EverydayEdit() {
             z={z}
             shelfRef={shelf}
             interactive={objectsIn}
+            returnBelow={priority ? PRIORITY_RETURN_BELOW : undefined}
           />
         ))}
       </div>
@@ -258,6 +297,27 @@ export default function EverydayEdit() {
           ))}
         </p>
       </div>
+
+      {/* The Moringa callout — the Canva reference ("rearrange your
+          day.png") has this as one continuous line sitting above the shelf,
+          at the same moment "the everyday edit" lands: REARRANGE / Your
+          Day! (BlurText, same play flag, band wipes alongside the "edit"
+          band) then Protein stays a priority. (type-on, same line, right
+          after). The band sits outside its BlurText for the usual remount
+          reason. */}
+      <h3 className="edit__priority-line">
+        <BlurText play={headingIn} delay={130} stepDuration={0.4}>
+          REARRANGE{' '}
+        </BlurText>
+        <span className="hl edit__priority-band" ref={set('priorityBand')}>
+          <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={1}>
+            Your Day!
+          </BlurText>
+        </span>{' '}
+        <span className="edit__priority-run" ref={set('priorityRun')}>
+          Protein stays a priority.
+        </span>
+      </h3>
     </section>
   )
 }
