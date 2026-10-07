@@ -4,12 +4,14 @@
   position: relative;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
 .reels__rail {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
+  pointer-events: none;
 }
 
 .reels__card {
@@ -21,8 +23,9 @@
   transform-origin: center center;
   will-change: transform, opacity;
   backface-visibility: hidden;
-  /* the rail is laid out every frame from a single transform; nothing here
-     may add a layout-affecting property */
+  cursor: pointer;
+  pointer-events: auto;
+  text-decoration: none;
 }
 
 .reels__card video {
@@ -33,15 +36,100 @@
   pointer-events: none;
 }
 
-/* cards that are not at the front sit back a touch in the scene */
-.reels__veil {
-  position: absolute;
-  inset: 0;
-  background: rgba(1, 40, 78, 0.22);
-  pointer-events: none;
-}
-
 .reels__card:focus-visible {
   outline: 0.03rem solid var(--white);
   outline-offset: 0.04rem;
 }
+
+/* ---- Speaker toggle (top-right, matching reference image) ---- */
+
+.reels__speaker {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: rgba(20, 20, 20, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
+}
+
+.reels__speaker svg {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.reels__speaker:hover {
+  background: rgba(20, 20, 20, 0.85);
+  border-color: #ffffff;
+  transform: scale(1.08);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+}
+
+.reels__speaker:active {
+  transform: scale(0.95);
+}
+
+/* Active unmuted state */
+.reels__speaker--active {
+  background: rgba(6, 182, 212, 0.85);
+  border-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.6), 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.reels__speaker--active:hover {
+  background: rgba(6, 182, 212, 1);
+  border-color: #ffffff;
+  transform: scale(1.08);
+}
+
+/* ---- Translucent play icon (centre) ---- */
+
+.reels__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.reels__play svg {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  /* slight offset to visually centre the triangle in the circle */
+  margin-left: 2px;
+  pointer-events: none;
+}
+
+/* On hover the play icon gently scales up */
+.reels__card:hover .reels__play {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%) scale(1.12);
+}
+

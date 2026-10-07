@@ -11,12 +11,12 @@ gsap.registerPlugin(ScrollTrigger)
 /* The six reels, in the order Prajwal listed them. The share tokens on the
    original links are personal, so only the permalink is kept. */
 const REELS = [
-  { title: 'Coatz blueprint', src: '/assets/insta/reels/coatz-blueprint.mp4', href: 'https://www.instagram.com/reel/DbQQiLWvhz6/' },
-  { title: "What's in my bag", src: '/assets/insta/reels/whats-in-my-bag.mp4', href: 'https://www.instagram.com/reel/DbnTNyvPFjT/' },
-  { title: 'Conveyor belt', src: '/assets/insta/reels/conveyor-belt.mp4', href: 'https://www.instagram.com/reel/DcGyEwcPpkf/' },
-  { title: 'Desk arrange', src: '/assets/insta/reels/desk-arrange.mp4', href: 'https://www.instagram.com/reel/DcofLtLvkcu/' },
-  { title: 'Your breakfast looks like', src: '/assets/insta/reels/your-breakfast.mp4', href: 'https://www.instagram.com/reel/DdCN1B-vY_B/' },
-  { title: 'A mind too full', src: '/assets/insta/reels/a-mind-too-full.mp4', href: 'https://www.instagram.com/reel/DdnlMhGtfhS/' },
+  { title: 'Coatz blueprint', src: '/assets/insta/reels/coatz-blueprint.mp4', href: 'https://www.instagram.com/reel/DbQQiLWvhz6/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==' },
+  { title: "What's in my bag", src: '/assets/insta/reels/whats-in-my-bag.mp4', href: 'https://www.instagram.com/reel/DbnTNyvPFjT/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==' },
+  { title: 'Conveyor belt', src: '/assets/insta/reels/conveyor-belt.mp4', href: 'https://www.instagram.com/reel/DcGyEwcPpkf/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==' },
+  { title: 'Desk arrange', src: '/assets/insta/reels/desk-arrange.mp4', href: 'https://www.instagram.com/reel/DcofLtLvkcu/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==' },
+  { title: 'Your breakfast looks like', src: '/assets/insta/reels/your-breakfast.mp4', href: 'https://www.instagram.com/reel/DdCN1B-vY_B/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==' },
+  { title: 'A mind too full', src: '/assets/insta/reels/a-mind-too-full.mp4', href: 'https://www.instagram.com/reel/DdnlMhGtfhS/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==' },
 ]
 
 export default function Instagram() {

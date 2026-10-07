@@ -1,0 +1,452 @@
+ okay 2 things in part 5 the image somehow it still has the render issue again like when i do hard refersh i can see its trying to do something but no image comes and just some white lines type come so fix that and that the animation should never break irrespective of where you chaneg make it resilitant and also below the carousel dont make it affected with the scroll of the webiste let it do its own round caraouls irrespective of the scroll like it should scroll and somehow the videos are not playing at all like its just the first image display on them and its not running at all i want the video to run all the tiem even if its not on the centre of carousel list it should still play so it looks good
+
+Two things. Let me make the Part 5 frame resilient first — the real fix is that it has no fallback: if the canvas fails for any reason you get nothing.
+
+● Write(src\components\RefineFrame.jsx)
+Added 96 lines, removed 69 lines
+   What is kept: the refinement itself. The image is pre-rendered at a ladder
+   of mosaic block sizes and a resolving front sweeps down it, so the picture
+   comes in coarse and sharpens behind a soft edge, with a glint riding the
+   front. The frame reserves its aspect ratio up front, so nothing shifts
+   while it resolves.
+   front.
+
+   What is removed, deliberately: every part of the AI-generation interface.
+   No status chip, no Queued/Generating/Refining/Ready/Failed label, no retry
+   pill, no spinner — and so no @hugeicons dependency, which the original
+   pulls in only to draw those. `showStatus` is accepted and ignored; there is
+   no status UI to show. This is a photograph arriving on a page, not a job
+   reporting progress.
+   pulls in only to draw those. `showStatus` is accepted and ignored.
+
+   `play` replaces the component's `status` prop: the section's ScrollTrigger
+   decides when it resolves, keeping GSAP as the single source of *when*.
+   Resilience — the reason this is structured the way it is:
+
+   The real <img> is always in the DOM and always laid out. The canvas is an
+   overlay that is transparent until it has successfully built and painted at
+   least once, and fades back out when the resolve finishes. So the canvas is
+   purely additive: if the image has not decoded, if the element has no box
+   yet, if a context cannot be had, if anything at all goes wrong, the
+   photograph is still on screen. Nothing in here can leave the frame empty
+   or half-drawn — which is what the earlier version did on a cold load.
+================================================================== */
+
+const LEVELS = [44, 28, 18, 11, 7, 4, 2, 1]
+const MIN_BOX = 8 // below this the frame has not been laid out yet
+const EDGE = 34 // px of soft transition at the resolving front
+const STRIPS = 14
+const HANDOFF = 260 // ms the canvas takes to hand back to the <img>
+
+export default function RefineFrame({
+  src,
+
+    const s = state.current
+    let stopped = false
+
+    const show = (on) => {
+      canvas.style.opacity = on ? '1' : '0'
+    }
+
+    const build = () => {
+      /* Bail until the frame actually has a box. Building at 0 and caching
+         that under the key is what left the picture blank on some loads —
+         the ladder was a single pixel and nothing ever asked for it again. */
+      if (canvas.clientWidth < MIN_BOX || canvas.clientHeight < MIN_BOX) return false
+      if (!img.naturalWidth) return false
+      const dpr = Math.min(2, window.devicePixelRatio || 1)
+      const W = Math.max(1, Math.round(canvas.clientWidth * dpr))
+      const H = Math.max(1, Math.round(canvas.clientHeight * dpr))
+      const key = `${img.currentSrc}|${W}x${H}`
+      if (s.key === key) return true
+      s.key = key
+      s.w = W
+      s.h = H
+      canvas.width = W
+      canvas.height = H
+      const iw = img.naturalWidth
+      const ih = img.naturalHeight
+      const cover = Math.max(W / iw, H / ih)
+      const sw = W / cover
+      const sh = H / cover
+      const sx = (iw - sw) / 2
+      const sy = (ih - sh) / 2
+      const g = canvas.getContext('2d')?.createLinearGradient(0, 0, W, 0)
+      if (g) {
+      try {
+        /* Bail until the frame actually has a box. Building at 0 and caching
+           that under the key is what left the picture blank on some loads —
+           the ladder was a single pixel and nothing ever asked for it again. */
+        if (canvas.clientWidth < MIN_BOX || canvas.clientHeight < MIN_BOX) return false
+        if (!img.naturalWidth) return false
+        const dpr = Math.min(2, window.devicePixelRatio || 1)
+        const W = Math.max(1, Math.round(canvas.clientWidth * dpr))
+        const H = Math.max(1, Math.round(canvas.clientHeight * dpr))
+        const key = `${img.currentSrc}|${W}x${H}`
+        if (s.key === key) return true
+        const probe = canvas.getContext('2d')
+        if (!probe) return false
+        s.key = key
+        s.w = W
+        s.h = H
+        canvas.width = W
+        canvas.height = H
+        const iw = img.naturalWidth
+        const ih = img.naturalHeight
+        const cover = Math.max(W / iw, H / ih)
+        const sw = W / cover
+        const sh = H / cover
+        const sx = (iw - sw) / 2
+        const sy = (ih - sh) / 2
+        const g = probe.createLinearGradient(0, 0, W, 0)
+        for (const [at, a] of [[0, 0], [0.2, 0.7], [0.5, 1], [0.8, 0.7], [1, 0]]) {
+          g.addColorStop(at, `rgba(255,255,255,${a})`)
+        }
+      }
+      s.glint = g
+      s.levels = LEVELS.map((block) => {
+        const b = block === 1 ? 1 : Math.max(2, Math.round(block * dpr))
+        const full = document.createElement('canvas')
+        full.width = W
+        full.height = H
+        const fc = full.getContext('2d')
+        if (!fc) return full
+        if (b === 1) {
+          fc.imageSmoothingEnabled = true
+          fc.imageSmoothingQuality = 'high'
+          fc.drawImage(img, sx, sy, sw, sh, 0, 0, W, H)
+        s.glint = g
+        s.levels = LEVELS.map((block) => {
+          const b = block === 1 ? 1 : Math.max(2, Math.round(block * dpr))
+          const full = document.createElement('canvas')
+          full.width = W
+          full.height = H
+          const fc = full.getContext('2d')
+          if (!fc) return full
+          if (b === 1) {
+            fc.imageSmoothingEnabled = true
+            fc.imageSmoothingQuality = 'high'
+            fc.drawImage(img, sx, sy, sw, sh, 0, 0, W, H)
+            return full
+          }
+          const small = document.createElement('canvas')
+          small.width = Math.max(1, Math.round(W / b))
+          small.height = Math.max(1, Math.round(H / b))
+          const sc = small.getContext('2d')
+          if (sc) {
+            sc.imageSmoothingEnabled = true
+            sc.imageSmoothingQuality = 'high'
+            sc.drawImage(img, sx, sy, sw, sh, 0, 0, small.width, small.height)
+          }
+          fc.imageSmoothingEnabled = false
+          fc.drawImage(small, 0, 0, W, H)
+          return full
+        }
+        const small = document.createElement('canvas')
+        small.width = Math.max(1, Math.round(W / b))
+        small.height = Math.max(1, Math.round(H / b))
+        const sc = small.getContext('2d')
+        if (sc) {
+          sc.imageSmoothingEnabled = true
+          sc.imageSmoothingQuality = 'high'
+          sc.drawImage(img, sx, sy, sw, sh, 0, 0, small.width, small.height)
+        }
+        fc.imageSmoothingEnabled = false
+        fc.drawImage(small, 0, 0, W, H)
+        return full
+      })
+      return true
+        })
+        return true
+      } catch {
+        // any failure here just means the <img> underneath stays visible
+        s.key = ''
+        return false
+      }
+    }
+
+    /* p 0 → 1: the front travels down the frame, finer levels behind it */
+
+          ctx.globalAlpha = 1
+        }
+      }
+      show(true)
+    }
+
+    const frame = (now) => {
+
+      const p = Math.min(1, (now - s.t0) / duration)
+      paint(p)
+      if (p < 1) s.raf = requestAnimationFrame(frame)
+      else {
+        s.raf = 0
+        // resolved: hand back to the real image underneath
+        show(false)
+      }
+    }
+
+    const start = () => {
+      if (stopped || !build()) return
+      if (stopped) return
+      if (!build()) {
+        show(false) // nothing to draw yet — the <img> carries the frame
+        return
+      }
+      if (reduced || !play) {
+        paint(play ? 1 : 0)
+        if (play) show(false)
+        else paint(0) // held at the coarse state until its cue
+        return
+      }
+      s.t0 = 0
+
+      if (stopped) return
+      const had = s.key
+      if (!build()) return
+      // a rebuild throws the old ladder away; repaint where we had got to
+      if (had !== s.key) paint(s.raf ? s.p : play ? 1 : s.p)
+      if (had !== s.key) paint(s.raf ? s.p : play ? 1 : 0)
+    })
+    ro.observe(canvas)
+
+
+  }, [play, reduced, duration, sweep])
+
+  return (
+    <div
+      className={`refineframe ${className}`}
+      style={{ aspectRatio, borderRadius: radius }}
+    >
+      <img ref={imgRef} src={src} alt={alt} style={{ display: 'none' }} />
+      <canvas ref={canvasRef} role="img" aria-label={alt} />
+    <div className={`refineframe ${className}`} style={{ aspectRatio, borderRadius: radius }}>
+      <img ref={imgRef} className="refineframe__img" src={src} alt={alt} />
+      <canvas
+        ref={canvasRef}
+        className="refineframe__canvas"
+        aria-hidden="true"
+        style={{ transitionDuration: `${HANDOFF}ms` }}
+      />
+    </div>
+  )
+}
+
+● Write(src\components\RefineFrame.css)
+Added 15 lines, removed 2 lines
+/* ---------- RefineFrame ---------- */
+/* ---------- RefineFrame ----------
+   The <img> always carries the frame; the canvas is an overlay that only
+   becomes visible once it has something real to draw, and fades back out
+   when the resolve finishes. Nothing here can leave the frame empty. */
+
+.refineframe {
+  position: relative;
+
+  overflow: hidden;
+}
+
+.refineframe canvas {
+.refineframe__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.refineframe__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity linear;
+}
+
+Now the carousel — off the scroll, and every visible reel playing.
+
+● Update(src\components\ReelCarousel.jsx)
+Added 3 lines, removed 3 lines
+  cardWidth = 270,
+  aspectRatio = 270 / 464,
+  gap = 34,
+  /* design px the rail drifts per second */
+  /* design px the rail drifts per second. The ring turns on its own clock —
+     it is deliberately NOT linked to page scroll, so it keeps going at the
+     same rate whether you are moving or sitting still. */
+  speed = 34,
+  /* how far the rail is pulled across the section's own scroll travel */
+  scrollShift = 900,
+  curve = 0.055, // degrees of turn per design px off centre
+  depth = 0.42, // px pushed back per design px off centre
+  frontScale = 1,
+
+● Update(src\components\ReelCarousel.jsx)
+Added 2 lines, removed 2 lines
+  const railRef = useRef(null)
+  const cardRefs = useRef([])
+  const videoRefs = useRef([])
+  const [front, setFront] = useState(0)
+  const frontRef = useRef(0)
+  const visible = useRef(true)
+  const reducedRef = useRef(reduced)
+  reducedRef.current = reduced
+
+  const pitch = cardWidth + gap
+  const loop = items.length * pitch
+
+● Update(src\components\ReelCarousel.jsx)
+Added 2 lines, removed 2 lines
+      if (!rail) return
+      const half = rail.clientWidth / 2
+      const unit = rail.clientWidth / 1366 // design px -> live px
+      let best = 0
+      let bestD = Infinity
+      /* anything within this of the middle is on screen and worth playing */
+      const span = 1366 / 2 + cardWidth
+      for (let i = 0; i < slots; i += 1) {
+        const el = cardRefs.current[i]
+        if (!el) continue
+
+● Update(src\components\ReelCarousel.jsx)
+Added 12 lines, removed 10 lines
+          ` scale(${frontScale + (sideScale - frontScale) * t})`
+        el.style.opacity = String(1 - fade * t)
+        el.style.zIndex = String(1000 - Math.round(Math.abs(dd)))
+        if (Math.abs(dd) < bestD) {
+          bestD = Math.abs(dd)
+          best = i
+
+        /* Every reel you can see keeps playing, not just the one at the
+           front — the ring should look alive all the way across. Only the
+           copies that have wrapped off screen are paused, so the decoder
+           count stays at what is actually visible. Driven straight off the
+           element rather than through state, so this costs no re-renders. */
+        const v = videoRefs.current[i]
+        if (v) {
+          const want = Math.abs(dd) < span && visible.current && !reducedRef.current
+          if (want && v.paused) v.play().catch(() => {})
+          else if (!want && !v.paused) v.pause()
+        }
+      }
+      /* the front *slot*, not the front item: the rail holds two copies of
+         every reel, and keying on the item would start both of them */
+      if (best !== frontRef.current) {
+        frontRef.current = best
+        setFront(best)
+      }
+    },
+    [slots, pitch, loop, cardWidth, curve, depth, frontScale, sideScale, fade, items.length],
+    [slots, pitch, loop, cardWidth, curve, depth, frontScale, sideScale, fade],
+  )
+
+  useLayoutEffect(() => {
+
+● Update(src\components\ReelCarousel.jsx)
+Added 7 lines, removed 12 lines
+  useLayoutEffect(() => {
+    const el = root.current
+    if (!el) return undefined
+    const state = { offset: 0, scroll: 0 }
+    const state = { offset: 0 }
+    let drift
+
+    const render = () => layout(state.offset + state.scroll)
+    const render = () => layout(state.offset)
+
+    const ctx = gsap.context(() => {
+      render()
+      if (!reduced) {
+        /* the ring's own clock — nothing here reads scroll position */
+        drift = gsap.to(state, {
+          offset: loop,
+          duration: loop / speed,
+
+          onUpdate: render,
+        })
+      }
+      /* The only thing scroll decides is whether the section is on screen,
+         so the rail and its videos can rest while it is not. */
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: (self) => {
+          if (reduced) return
+          state.scroll = self.progress * scrollShift
+          render()
+        },
+        onToggle: (self) => {
+          visible.current = self.isActive
+          if (!self.isActive || reduced) {
+            videoRefs.current.forEach((v) => v && v.pause())
+          } else {
+            videoRefs.current[frontRef.current]?.play().catch(() => {})
+          }
+          if (!self.isActive) videoRefs.current.forEach((v) => v && v.pause())
+          if (drift) (self.isActive ? drift.play() : drift.pause())
+          render()
+        },
+      })
+    }, el)
+
+● Update(src\components\ReelCarousel.jsx)
+Added 1 line, removed 12 lines
+      ctx.revert()
+      videoRefs.current.forEach((v) => v && v.pause())
+    }
+  }, [layout, loop, speed, scrollShift, reduced])
+  }, [layout, loop, speed, reduced])
+
+  /* Only the reel at the front plays. Every other one is paused and rewound,
+     so there is never more than one video decoding. */
+  useEffect(() => {
+    videoRefs.current.forEach((v, i) => {
+      if (!v) return
+      // reduced motion: the reels stay on their poster frame until asked
+      if (i === front && visible.current && !reduced) v.play().catch(() => {})
+      else v.pause()
+    })
+  }, [front, reduced])
+
+  return (
+    <div
+      className={`reels ${className}`}
+
+● Update(src\components\ReelCarousel.jsx)
+Removed 1 line
+      <div className="reels__rail" ref={railRef}>
+        {Array.from({ length: slots }, (_, i) => {
+          const item = items[i % items.length]
+          const isFront = i === front
+          return (
+            <a
+              key={`${item.href}-${i}`}
+
+● Update(src\components\ReelCarousel.jsx)
+Removed 1 line
+                aria-label={item.title}
+                tabIndex={-1}
+              />
+              {!isFront && <span className="reels__veil" aria-hidden="true" />}
+            </a>
+          )
+        })}
+
+● Update(src\components\ReelCarousel.jsx)
+Added 1 line, removed 1 line
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import './ReelCarousel.css'
+
+  Ran 1 shell command
+You've hit your session limit · resets 2:50pm (Asia/Kolkata)
+
+● Usage limit reached · continuing automatically at 2:50pm · esc to cancel
+
+✻ Worked for 3m 8s · done 12:06 PM
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+>
+─────────────────────────────────────────────────────────
