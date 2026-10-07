@@ -111,7 +111,12 @@ export function clearTypeReveal(run, caret) {
    optional knob. */
 export function addTypeReveal(
   tl,
-  { run, caret, position, speed = 0.023, minDuration = 0.45, blur = 0 },
+  /* speed/minDuration ~1.5x faster than the original 0.023 / 0.45 (desktop
+     client feedback: "quick, clearly animated, immediately readable" — a
+     moderate speedup, not instant text). Section-specific overrides below
+     (Footer's FAST_SPEED, Snack's TYPE_SPEED) are scaled by the same ~1.5x
+     so their intentional relationship to this default is preserved. */
+  { run, caret, position, speed = 0.0155, minDuration = 0.3, blur = 0 },
 ) {
   if (!run) return 0
 

@@ -31,14 +31,14 @@ const GREEN_HOVER = '#9bdd17'
 const GREEN_BASE = '#5f9000' // the ledge the cap sinks onto
 const WHITE = '#ffffff'
 
-export default function NavPill({ label }) {
+export default function NavPill({ label, href = '#' }) {
   const scale = useCanvasScale()
   const sink = Math.max(1, Math.round(SINK * scale))
 
   return (
     <TactileButton
       label={label}
-      link="#"
+      link={href}
       rounded={100}
       padding="0px"
       fill={GREEN}

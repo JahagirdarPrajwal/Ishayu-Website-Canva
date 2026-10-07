@@ -43,11 +43,7 @@ export default function BetterChoice() {
     mm.add(
       { desktop: DESKTOP, motionOK: '(prefers-reduced-motion: no-preference)' },
       (ctx) => {
-        /* As elsewhere: below the breakpoint the artboard reflows into a
-           column and with reduced motion everything renders at rest. The
-           heading still has to be released either way, or BlurText sits at
-           opacity 0 waiting for a cue that never comes. */
-        if (!ctx.conditions.desktop || !ctx.conditions.motionOK) {
+        if (!ctx.conditions.motionOK) {
           setHeadingIn(true)
           return undefined
         }
@@ -56,7 +52,8 @@ export default function BetterChoice() {
            are both headings and the section wants one consistent reveal:
            the words land, then the marker is drawn through the italic. The
            wipe takes its duration from the band's own width so it strokes
-           at the same rate as every other band on the page. */
+           at the same rate as every other band on the page. This part does
+           not depend on the artboard's geometry, so it runs at every width. */
         const tl = gsap.timeline({
           scrollTrigger: { trigger: heading.current, start: 'top 85%' },
           onStart: () => setHeadingIn(true),
@@ -68,9 +65,12 @@ export default function BetterChoice() {
            expo.out spends most of its travel in the first third, so each one
            arrives fast and eases to a stop, handing straight over to Motion's
            levitation. `from` with a ScrollTrigger renders the start state
-           immediately, so nothing flashes at rest beforehand. */
+           immediately, so nothing flashes at rest beforehand. Mobile travels
+           a shorter distance — in the stacked column each pack is its own
+           full-width row, so 95% of its own height reads as a much bigger
+           move than the same percentage does inside the wide desktop strip. */
         gsap.from(gsap.utils.toArray('.better__product', row.current), {
-          yPercent: 95,
+          yPercent: ctx.conditions.desktop ? 95 : 45,
           opacity: 0,
           duration: 1.25,
           stagger: 0.14,
@@ -92,12 +92,12 @@ export default function BetterChoice() {
           which would drop the inline --hl-w the wipe is driving. */}
       <h2 className="better__heading" ref={heading}>
         <span className="better__plain">
-          <BlurText play={headingIn} delay={130} stepDuration={0.4}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27}>
             Make your
           </BlurText>
         </span>
         <span className="hl better__italic" ref={band}>
-          <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={2}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27} indexOffset={2}>
             better choice
           </BlurText>
         </span>

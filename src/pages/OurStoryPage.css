@@ -1,0 +1,207 @@
+/* ---------- Our Story — static recreation of "3.png" ----------
+   Same flow-layout convention as the Product Page (not absolute-
+   positioned over a fixed artboard): rem-scaled, reflows on its own
+   below 860px via the global root-font rebase, no responsive.css
+   entries needed to avoid overflow. */
+
+/* ==================================================================
+   THE GRADIENT — sampled directly from "3.png", not an invented blue.
+
+   Ten colour stops taken at even intervals down a clean strip of the
+   reference (x≈1280, clear of text) from y=0 to y≈3335 (where the
+   landscape crop's own top-left pixel — #44c4ff — takes over), e.g.:
+     y=0    rgb(39,55,255)   #2737ff
+     y=800  rgb(46,89,255)   #2e59ff
+     y=1600 rgb(53,123,255)  #357bff
+     y=2400 rgb(60,158,255)  #3c9eff
+     y=3200 rgb(67,192,255)  #43c0ff
+   R barely moves (39→68) and B stays pegged at 255 throughout — it's G
+   that carries almost the entire top-to-bottom journey, and the
+   progression between samples is close to perfectly linear already, so
+   this is one continuous linear-gradient with that real data as its
+   stops, not a hand-picked light/medium/dark triad: there is nothing for
+   the eye to catch as a "boundary" because the underlying measurement
+   never had one. Percent-based stops (not px) so it stretches to however
+   tall this page's own content turns out to be, exactly like every
+   other scale-relative value in this codebase (CLAUDE.md §2). */
+.story {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    #2737ff 0%,
+    #2a48ff 12%,
+    #2e59ff 24%,
+    #316aff 36%,
+    #357bff 48%,
+    #398cff 60%,
+    #3c9eff 72%,
+    #40afff 84%,
+    #43c0ff 96%,
+    #44c4ff 100%
+  );
+  padding-bottom: 0.4rem;
+}
+
+/* ---- header ---- */
+.story__header {
+  position: relative;
+  height: 1.2rem;
+}
+
+.story__header .hero__logo {
+  filter: brightness(0) invert(1);
+}
+
+/* ---- heading: "know us / better" ---- */
+.story__heading {
+  margin: 0.5rem 0 0;
+  padding-left: 0.32rem;
+  font-size: 0.86rem;
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: var(--track-display);
+}
+
+.story__heading-line1 {
+  display: block;
+  color: var(--white);
+}
+
+.story__heading-band {
+  display: inline-block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink);
+  --hl-x: 0.03rem;
+  --hl-y: 0.02rem;
+  --hl-w: calc(100% + 0.06rem);
+  --hl-h: 0.9em;
+}
+
+.story__heading-line2 {
+  display: block;
+}
+
+/* ---- body copy ---- */
+.story__body {
+  padding: 0.5rem 0.32rem 0;
+  color: var(--white);
+}
+
+.story__block {
+  max-width: 6.1rem;
+  margin: 0 0 0.55rem;
+}
+
+.story__block--right {
+  margin-left: auto;
+  text-align: right;
+  max-width: 4.8rem;
+}
+
+.story__block h2 {
+  margin: 0 0 0.16rem;
+  font-size: 0.42rem;
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: var(--track-display);
+}
+
+.story__block p {
+  margin: 0 0 0.14rem;
+  font-size: 0.185rem;
+  line-height: 0.27rem;
+  letter-spacing: var(--track-body);
+}
+
+.story__block p:last-child {
+  margin-bottom: 0;
+}
+
+.story__block--right p {
+  font-size: 0.165rem;
+  line-height: 0.25rem;
+  max-width: 4.3rem;
+  margin-left: auto;
+}
+
+.story__bold,
+.story__block strong {
+  font-weight: 700;
+}
+
+.story__caps {
+  text-transform: uppercase;
+}
+
+.story__triplet {
+  line-height: 0.27rem;
+}
+
+/* ---- sign-off: logo + tagline ---- */
+.story__sign {
+  margin-top: 0.3rem;
+}
+
+/* recoloured dark green via mask (the asset itself is cream — see the
+   note in OurStoryPage.jsx); #235f30 is sampled off the reference logo
+   directly, not an approximation */
+.story__sign-logo {
+  width: 1.3rem;
+  aspect-ratio: 212 / 90;
+  background-color: #235f30;
+  -webkit-mask-image: url('/assets/footer/ishayu-logo.png');
+  mask-image: url('/assets/footer/ishayu-logo.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+}
+
+.story__sign-tag {
+  margin: 0.08rem 0 0;
+  font-size: 0.195rem;
+  font-weight: 700;
+  letter-spacing: var(--track-body);
+  color: var(--white);
+}
+
+/* ---- landscape / tree ----
+   Picks up in the exact blue (#44c4ff) the gradient above ends on, so
+   the seam between the CSS gradient and this cropped photo is invisible
+   (modal/gradient-refinement brief §3). */
+.story__landscape {
+  width: 100%;
+  line-height: 0;
+}
+
+.story__landscape img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ---- mobile safety net, not the dedicated pass ---- */
+@media (max-width: 859.98px) {
+  .story__heading {
+    padding-left: 0.3rem;
+    font-size: 0.65rem;
+  }
+
+  .story__body {
+    padding: 0.4rem 0.3rem 0;
+  }
+
+  .story__block,
+  .story__block--right {
+    max-width: 100%;
+  }
+
+  .story__block--right p {
+    max-width: 100%;
+  }
+}

@@ -3,7 +3,6 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import BlurText from '../components/BlurText.jsx'
 import {
-  DESKTOP,
   addBandWipe,
   addTypeReveal,
   armTypeReveal,
@@ -40,8 +39,8 @@ function InstagramIcon() {
    the clip reveal ("that blur thing behind those texts"). Both are local
    overrides passed into the one shared addTypeReveal helper; nothing about
    how Parts 1-6 call it changes. */
-const FAST_SPEED = 0.014
-const FAST_MIN = 0.22
+const FAST_SPEED = 0.0093
+const FAST_MIN = 0.147
 const TEXT_BLUR = 0.1 // rem
 
 const BODY = [
@@ -71,12 +70,13 @@ export default function Footer() {
     const mm = gsap.matchMedia()
 
     mm.add(
-      { desktop: DESKTOP, motionOK: '(prefers-reduced-motion: no-preference)' },
+      { motionOK: '(prefers-reduced-motion: no-preference)' },
       (ctx) => {
-        /* Below the breakpoint responsive.css reflows the artboard into a
-           column, and with reduced motion everything renders at rest
-           (CLAUDE.md §8.12) — same convention as every other section. */
-        if (!ctx.conditions.desktop || !ctx.conditions.motionOK) {
+        /* With reduced motion everything renders at rest (CLAUDE.md
+           §8.12) — same convention as every other section. The type reveal
+           itself is geometry-free (a clip-path wipe over real text), so it
+           plays the same way at every width now. */
+        if (!ctx.conditions.motionOK) {
           setHeadingIn(true)
           return undefined
         }
@@ -124,12 +124,12 @@ export default function Footer() {
           --hl-w the wipe is driving (the bug already fixed in Parts 2-3). */}
       <h2 className="footer__heading">
         <span className="footer__line1">
-          <BlurText play={headingIn} delay={130} stepDuration={0.4}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27}>
             talk snacks
           </BlurText>
         </span>
         <span className="hl footer__line2" ref={set('band')}>
-          <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={2}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27} indexOffset={2}>
             with us
           </BlurText>
         </span>
@@ -153,69 +153,81 @@ export default function Footer() {
           wordmark and the (R) mark land on top of their baked counterparts,
           not beside them — so what's underneath reads as a soft ambient
           shadow the logo is sitting on, not a second, misaligned logo. */}
-      <img className="footer__logo" src="/assets/footer/ishayu-logo.png" alt="Ishayu" />
+      {/* .footer__bottom is a plain, unpositioned wrapper — it carries no
+          layout of its own on desktop, so the logo and the contact column
+          still position themselves against the section exactly as before.
+          On mobile it becomes the flex row that puts them side by side:
+          logo lower-left, contact lower-right (mobile-pass brief), instead
+          of one long stacked column. */}
+      <div className="footer__bottom">
+        <img className="footer__logo" src="/assets/footer/ishayu-logo.png" alt="Ishayu" />
 
-      <div className="footer__contact">
-        <h3>
-          <span className="footer__run">locate us</span>
-        </h3>
-        <p>
-          {ADDRESS.map((line) => (
-            <span className="footer__line" key={line}>
-              <span className="footer__run">{line}</span>
-            </span>
-          ))}
-        </p>
+        <div className="footer__contact">
+          <div className="footer__contact-col">
+            <h3>
+              <span className="footer__run">locate us</span>
+            </h3>
+            <p>
+              {ADDRESS.map((line) => (
+                <span className="footer__line" key={line}>
+                  <span className="footer__run">{line}</span>
+                </span>
+              ))}
+            </p>
 
-        <h3>
-          <span className="footer__run">give us a call</span>
-        </h3>
-        <p>
-          {PHONE.map((line) => (
-            <span className="footer__line" key={line}>
-              <span className="footer__run">{line}</span>
-            </span>
-          ))}
-        </p>
+            <h3>
+              <span className="footer__run">give us a call</span>
+            </h3>
+            <p>
+              {PHONE.map((line) => (
+                <span className="footer__line" key={line}>
+                  <span className="footer__run">{line}</span>
+                </span>
+              ))}
+            </p>
 
-        <h3>
-          <span className="footer__run">mail</span>
-        </h3>
-        <p>
-          <span className="footer__line">
-            <a className="footer__run" href="mailto:reachus@ishayu.in">
-              reachus@ishayu.in
-            </a>
-          </span>
-        </p>
+            <h3>
+              <span className="footer__run">mail</span>
+            </h3>
+            <p>
+              <span className="footer__line">
+                <a className="footer__run" href="mailto:reachus@ishayu.in">
+                  reachus@ishayu.in
+                </a>
+              </span>
+            </p>
+          </div>
 
-        <h3>
-          <span className="footer__run">socials</span>
-        </h3>
-        <p>
-          <span className="footer__line">
-            <a
-              className="footer__run footer__social"
-              href="https://www.linkedin.com/company/ishayu/?viewAsMember=true"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Ishayu on LinkedIn"
-            >
-              @ishayu <LinkedInIcon />
-            </a>
-          </span>
-          <span className="footer__line">
-            <a
-              className="footer__run footer__social"
-              href="https://www.instagram.com/ishayu_vittarthaa/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Ishayu on Instagram"
-            >
-              @ishayu_vittarthaa <InstagramIcon />
-            </a>
-          </span>
-        </p>
+          <div className="footer__contact-col">
+            <h3>
+              <span className="footer__run">socials</span>
+            </h3>
+            <p>
+              <span className="footer__line">
+                <a
+                  className="footer__run footer__social"
+                  href="https://www.linkedin.com/company/ishayu/?viewAsMember=true"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Ishayu on LinkedIn"
+                >
+                  @ishayu <LinkedInIcon />
+                </a>
+              </span>
+              <span className="footer__line">
+                <a
+                  className="footer__run footer__social"
+                  href="https://www.instagram.com/ishayu_vittarthaa/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Ishayu on Instagram"
+                >
+                  @ishayu_vittarthaa <InstagramIcon />
+                </a>
+              </span>
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   )

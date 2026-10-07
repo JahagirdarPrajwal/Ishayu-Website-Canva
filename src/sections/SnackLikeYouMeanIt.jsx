@@ -7,7 +7,6 @@ import Levitate from '../components/Levitate.jsx'
 import RefineFrame from '../components/RefineFrame.jsx'
 import SpringCheck from '../components/SpringCheck.jsx'
 import {
-  DESKTOP,
   addBandWipe,
   addSelectionSweep,
   addTypeReveal,
@@ -38,7 +37,7 @@ const BODY = [
 /* Seconds per character for this section's type-on. Slower than the shared
    default (0.023) — this is the last long stretch of copy on the page and it
    was going past before it could be read. */
-const TYPE_SPEED = 0.034
+const TYPE_SPEED = 0.0227
 
 /* A quiet editorial aside explaining the checklist is interactive — sits
    below the photograph and left of the notes card, same spot and the same
@@ -77,9 +76,9 @@ export default function SnackLikeYouMeanIt() {
     const mm = gsap.matchMedia()
 
     mm.add(
-      { desktop: DESKTOP, motionOK: '(prefers-reduced-motion: no-preference)' },
+      { motionOK: '(prefers-reduced-motion: no-preference)' },
       (ctx) => {
-        if (!ctx.conditions.desktop || !ctx.conditions.motionOK) {
+        if (!ctx.conditions.motionOK) {
           setHeadingIn(true)
           setCtaIn(true)
           setPhotoIn(true)
@@ -203,16 +202,16 @@ export default function SnackLikeYouMeanIt() {
     <section className="section snack" ref={root}>
       <h2 className="snack__heading" ref={set('heading')}>
         <span className="snack__line1">
-          <BlurText play={headingIn} delay={130} stepDuration={0.4}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27}>
             snack like
           </BlurText>
         </span>
         <span className="snack__line2">
-          <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={2}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27} indexOffset={2}>
             you
           </BlurText>
           <span className="hl snack__italic" ref={set('band')}>
-            <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={3}>
+            <BlurText play={headingIn} delay={85} stepDuration={0.27} indexOffset={3}>
               mean it
             </BlurText>
           </span>
@@ -227,6 +226,28 @@ export default function SnackLikeYouMeanIt() {
         ))}
       </p>
 
+      {/* The "slay.png" title bar was baked into the top of the photograph;
+          RefineFrame wraps whatever it is given in its own frame, so the bar
+          is a sibling and only the picture resolves (CLAUDE.md §8.13). */}
+      <div className="snack__photo" ref={set('photo')}>
+        <img className="snack__photo-bar" src="/assets/snack/slay-bar.png" alt="" />
+        <RefineFrame
+          className="snack__photo-frame"
+          src="/assets/snack/card-lemons-photo.jpg"
+          alt="Beet energy bar with lemons"
+          aspectRatio="468 / 518"
+          radius={0}
+          /* long enough to watch the picture actually resolve — at ~1.1s the
+             front crossed the frame before you could see it happen */
+          duration={2600}
+          play={photoIn}
+        />
+      </div>
+
+      {/* Moved after the photo in the DOM (not before it) so the mobile
+          column reads heading → paragraph → photo → CTA → folders, the
+          order the mobile-pass brief asks for; desktop is absolutely
+          positioned regardless, so this is invisible there. */}
       <p className="snack__cta">
         <span className="snack__cta-line">
           <FoldText
@@ -252,24 +273,6 @@ export default function SnackLikeYouMeanIt() {
           />
         </span>
       </p>
-
-      {/* The "slay.png" title bar was baked into the top of the photograph;
-          RefineFrame wraps whatever it is given in its own frame, so the bar
-          is a sibling and only the picture resolves (CLAUDE.md §8.13). */}
-      <div className="snack__photo" ref={set('photo')}>
-        <img className="snack__photo-bar" src="/assets/snack/slay-bar.png" alt="" />
-        <RefineFrame
-          className="snack__photo-frame"
-          src="/assets/snack/card-lemons-photo.jpg"
-          alt="Beet energy bar with lemons"
-          aspectRatio="468 / 518"
-          radius={0}
-          /* long enough to watch the picture actually resolve — at ~1.1s the
-             front crossed the frame before you could see it happen */
-          duration={2600}
-          play={photoIn}
-        />
-      </div>
 
       <div className="snack__folders" ref={set('folders')}>
         {FOLDERS.map(({ name, y, lev }) => (
@@ -327,7 +330,7 @@ export default function SnackLikeYouMeanIt() {
           it) rather than a new style. */}
       <div className="snack__reminder">
         <p className="snack__reminder-head">
-          <BlurText play={reminderIn} delay={120} stepDuration={0.35}>
+          <BlurText play={reminderIn} delay={80} stepDuration={0.235}>
             {REMINDER_HEAD}
           </BlurText>
         </p>

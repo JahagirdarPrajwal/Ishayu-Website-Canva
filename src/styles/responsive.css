@@ -37,7 +37,7 @@
       .edit__shelf *
     ):not(.edit__note *):not(.better__row *):not(.snack__note *):not(.insta__rail *):not(
       .hero__logo
-    ) {
+    ):not(.footer__logo):not(.snack__reminder *):not(.aura__orbit *) {
     position: relative !important;
     inset: auto !important;
     width: auto !important;
@@ -53,7 +53,7 @@
 
   /* .hero__logo excluded for the same reason as above: it has its own
      explicit mobile width a few lines down, not a full-bleed one. */
-  .section img:not(.section__bg):not(.hero__logo) {
+  .section img:not(.section__bg):not(.hero__logo):not(.footer__logo):not(.aura__orbit img) {
     width: 100% !important;
     height: auto !important;
     object-fit: contain !important;
@@ -197,12 +197,16 @@
     text-align: center !important;
   }
 
-  /* ---- 2. everyday edit ---- */
+  /* ---- 2. everyday edit — a real rack, not the desktop shelf shrunk ----
+     380 x 760 is the mobile coordinate space EverydayEdit.jsx computes
+     MOBILE_OBJECTS/MOBILE_RAILS against (see that file) — taller than wide,
+     because seven objects spread across three full-width rails need more
+     vertical room than the desktop's 700 x 660 cluster did. */
   .edit__shelf {
     width: 100% !important;
     height: auto !important;
-    aspect-ratio: 700 / 660; /* the block the composite used to occupy */
-    margin-bottom: 0.26rem;
+    aspect-ratio: 380 / 760;
+    margin-bottom: 0.2rem;
   }
 
   /* the blanket img rule above would override the rail's share-of-the-shelf
@@ -242,11 +246,34 @@
     text-align: center !important;
   }
 
-  /* the product row keeps its own coordinate space, like the shelf */
+  /* ---- better choice: a vertical stack, not the desktop strip ----
+     Four products side by side only works with the desktop's horizontal
+     room; stacked this narrow they would be thumbnail-sized. Each pack gets
+     its own full-width row instead, keeping the cutouts, the drop shadow and
+     the levitation loop exactly as they are. */
   .better__row {
+    position: relative !important;
     width: 100% !important;
     height: auto !important;
-    aspect-ratio: 1366 / 513;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.32rem;
+    padding: 0.1rem 0;
+  }
+
+  .better__product {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 1.9rem !important;
+  }
+
+  /* the cocoa bar is landscape, the other three are upright pouches/jars —
+     giving it its own width keeps every pack a similar visual size instead
+     of the bar rendering tiny at the same width as a tall pouch */
+  .better__product:nth-child(2) {
+    width: 2.6rem !important;
   }
 
   /* ---- 4. chase the aura ---- */
@@ -255,10 +282,19 @@
     margin-bottom: 0.2rem;
   }
 
-  /* the orbit needs its own box and the figure is part of the backdrop
-     photograph down here, so neither survives the stacked column */
+  /* ---- the orbit, kept ----
+     OrbitImages already scales its whole 1000-unit space (ring, tiles and
+     the subject together) to whatever width its container reports, so
+     giving it a mobile-sized box is enough — nothing about the component
+     itself needs to know it is on a phone. It drops into flow here instead
+     of sitting at its desktop left/top, centred between the IE mark and the
+     "find your game" copy. */
   .aura__orbit {
-    display: none;
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 3.6rem !important;
+    margin: 0.1rem auto 0.3rem;
   }
 
   .aura__closing {
@@ -309,6 +345,21 @@
     font-size: 0.14rem;
   }
 
+  /* the bubble sits beside the note rather than at its measured desktop
+     spot, in flow right after the folders and before the note card, small
+     and subtle as asked — not a redesign, just a new resting place */
+  .snack__reminder {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    display: inline-block;
+    margin: 0 0 0.2rem;
+  }
+
+  .snack__reminder-tail {
+    display: none;
+  }
+
   /* ---- 6. instagram ---- */
   .insta {
     padding-bottom: 0.3rem !important;
@@ -333,22 +384,56 @@
     aspect-ratio: 1366 / 464;
   }
 
-  /* ---- 7. footer ---- */
+  /* ---- 7. footer — a compact composition, not one long stacked column ----
+     Logo lower-left, contact lower-right: .footer__bottom is the flex row
+     that puts the two side by side (mobile-pass brief). */
+  .footer__bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.2rem;
+    margin-top: 0.3rem;
+  }
+
+  /* excluded from the blanket reset above (like .hero__logo) so its width
+     survives; that also means it keeps the desktop position:absolute
+     unless undone here, which would pull it out of the flex row entirely */
   .footer__logo {
-    width: 1.55rem !important;
-    margin: 0.36rem 0 0.26rem;
+    position: static !important;
+    width: 1.1rem !important;
+    flex: 0 0 auto;
+    margin: 0 !important;
+  }
+
+  /* two columns — location/phone/email on one side, the socials on the
+     other, same grouping as the brief asks for */
+  .footer__contact {
+    display: flex;
+    gap: 0.22rem;
+    text-align: left !important;
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: flex-end;
+  }
+
+  .footer__contact-col {
+    min-width: 0;
   }
 
   .footer__contact h3 {
-    font-size: 0.23rem;
-    line-height: 1.25;
-    margin-top: 0.18rem;
+    font-size: 0.19rem;
+    line-height: 1.2;
+    margin-top: 0.14rem;
+  }
+
+  .footer__contact-col:first-child h3:first-child {
+    margin-top: 0;
   }
 
   .footer__contact p {
-    font-size: 0.145rem;
-    line-height: 0.2rem;
-    margin: 0.04rem 0 0 !important;
+    font-size: 0.125rem;
+    line-height: 0.17rem;
+    margin: 0.03rem 0 0 !important;
   }
 
   .footer__social {
@@ -357,8 +442,8 @@
   }
 
   .footer__icon {
-    width: 0.13rem !important;
-    height: 0.13rem !important;
+    width: 0.12rem !important;
+    height: 0.12rem !important;
     flex: 0 0 auto;
   }
 }
@@ -412,9 +497,5 @@
   .insta__rail > :last-child:nth-child(odd) {
     grid-column: 1 / -1;
     max-width: 50%;
-  }
-
-  .footer__logo {
-    margin-bottom: 0.3rem;
   }
 }

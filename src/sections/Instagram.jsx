@@ -3,7 +3,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import BlurText from '../components/BlurText.jsx'
 import ReelCarousel from '../components/ReelCarousel.jsx'
-import { DESKTOP, addBandWipe } from '../anim/helpers.js'
+import { addBandWipe } from '../anim/helpers.js'
 import './Instagram.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -33,14 +33,13 @@ export default function Instagram() {
     const mm = gsap.matchMedia()
 
     mm.add(
-      { desktop: DESKTOP, motionOK: '(prefers-reduced-motion: no-preference)' },
+      { motionOK: '(prefers-reduced-motion: no-preference)' },
       (ctx) => {
         if (!ctx.conditions.motionOK) setReduced(true)
-        /* Below the breakpoint responsive.css reflows the artboard into a
-           column; with reduced motion everything renders at rest. The
-           heading still has to be released either way, or BlurText waits at
-           opacity 0 for a cue that never comes. */
-        if (!ctx.conditions.desktop || !ctx.conditions.motionOK) {
+        /* With reduced motion everything renders at rest. The heading still
+           has to be released either way, or BlurText waits at opacity 0 for
+           a cue that never comes. */
+        if (!ctx.conditions.motionOK) {
           setHeadingIn(true)
           return undefined
         }
@@ -70,15 +69,15 @@ export default function Instagram() {
       <img className="insta__band" src="/assets/insta/band.jpg" alt="" />
 
       <h2 className="insta__heading" ref={heading}>
-        <BlurText play={headingIn} delay={130} stepDuration={0.4}>
+        <BlurText play={headingIn} delay={85} stepDuration={0.27}>
           stalk us on{' '}
         </BlurText>
         <span className="hl insta__word" ref={band}>
-          <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={3}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27} indexOffset={3}>
             Instagram
           </BlurText>
         </span>
-        <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={4}>
+        <BlurText play={headingIn} delay={85} stepDuration={0.27} indexOffset={4}>
           {' '}
           or just stock up
         </BlurText>

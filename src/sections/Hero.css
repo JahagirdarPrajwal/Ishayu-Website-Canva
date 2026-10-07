@@ -5,58 +5,9 @@
   background: var(--blue-sky);
 }
 
-/* ---- wordmark, top-left ----
-   Sits in the open corner above the racing card and left of the first nav
-   pill (home starts at 3.35rem) — measured so it clears both: bottom edge
-   0.995rem is well above the card's 1.73rem top, right edge 1.5rem is well
-   short of the pill row. Sized from the asset's own 212:90 so it is never
-   stretched. */
-.hero__logo {
-  position: absolute;
-  left: 0.42rem;
-  top: 0.535rem;
-  width: 1.08rem;
-  aspect-ratio: 212 / 90;
-  z-index: 10;
-}
-
-/* ---- navigation ---- */
-.hero__nav {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-}
-
-/* The pill is now just the measured box the OriginKit tactile button sits
-   in — border, type and fill moved into the component's props so it can
-   animate them (see src/components/NavPill.jsx). The geometry below is
-   unchanged from the approved recreation. */
-.hero__pill {
-  position: absolute;
-  top: 0.57rem;
-  height: 0.39rem;
-  /* the button's outer wrapper is an inline-block, so in a normal block the
-     line box's baseline leading would push it below the slot — flex takes
-     the cap out of the text flow and stretches it to the measured box */
-  display: flex;
-}
-
-.hero__pill > div {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-/* The button's base layer stays visible at rest, which is what makes the
-   press read as a press: the pill sits raised on its ledge, and clicking
-   sinks the cap down onto it. Revealing the ledge on hover instead inverts
-   the reading — a flat pill that grows a shadow looks like it is popping
-   up, so the click afterwards feels like a return rather than a push.
-   The ledge inherits the cap's border, which would draw a second outline
-   below every pill; the fill alone carries it, so the border is dropped.
-   !important because the component sets it inline. */
-.hero__pill div[aria-hidden='true'] {
-  border-color: transparent !important;
-}
+/* .hero__logo, .hero__nav, .hero__pill and friends moved to
+   src/components/Header.css — Hero.jsx now renders <Header>, which imports
+   that stylesheet itself, so the rules still apply here unchanged. */
 
 /* ---- headline ---- */
 .hero__headline {
@@ -101,25 +52,76 @@
   --hl-h: 1.11rem;
 }
 
-/* ---- collage cards ---- */
+/* ---- floating products ----
+   .hero__card is the GSAP-owned outer stage: it carries the one-time
+   fall/rotate entrance (Hero.jsx) and, via --tilt, the product's resting
+   angle as a plain CSS fallback — needed because under reduced motion the
+   GSAP timeline never runs at all, so without this the product would sit
+   dead level instead of at the tilt the screenshots show. When the
+   timeline does run, its own inline transform simply takes over for the
+   entrance and ends on the same value, so there is nothing to reconcile. */
 .hero__card {
   position: absolute;
+  transform: rotate(var(--tilt, 0deg));
 }
 
-.hero__card img {
-  display: block;
-  object-fit: cover;
+/* HeroProduct's own two layers: a shadow and the image, Motion-driven
+   (see HeroProduct.jsx) — kept off the GSAP-owned node above so the two
+   libraries never write to the same transform. */
+.hero__product-stage {
+  position: relative;
+  width: 100%;
 }
 
-.hero__card-label {
+.hero__product-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: -0.05rem;
+  width: 64%;
+  /* was a fixed 0.1rem — constant regardless of how big the product
+     itself is, which on the larger products left a shadow that read as
+     tiny relative to them. aspect-ratio keeps it proportional to its own
+     (percentage) width instead. Kept close to the product's own bottom
+     edge (small `bottom` offset, flat aspect ratio) rather than reaching
+     further down — on the larger products that reach reliably landed on
+     top of the *next* product below it instead of on open grass. */
+  aspect-ratio: 4.2 / 1;
+  /* darker core, and it holds that darkness out further (55% instead of
+     ~0%) before fading, which is what actually reads as a shadow against
+     grass — the previous rgba(6,14,6,0.75) gradient, combined with the
+     motion opacity below, worked out to roughly half that strength and
+     was effectively invisible once blurred (confirmed by temporarily
+     forcing it solid red — the position/size were already correct, only
+     the contrast was not). */
+  background: radial-gradient(ellipse at center, rgba(4, 10, 4, 0.95) 0%, rgba(4, 10, 4, 0.85) 55%, rgba(4, 10, 4, 0) 100%);
+  filter: blur(0.015rem);
+  transform: translateX(-50%);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.hero__product-img {
   display: block;
-  margin-top: 0.03rem;
-  text-align: center;
-  font-size: 0.16rem;
-  font-weight: 400;
-  letter-spacing: var(--track-body);
-  color: var(--white);
-  white-space: nowrap;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+/* ---- the Beetroot Protein bar in his hand ----
+   Calibrated against the baked-in bar in hero-bg.jpg (see the BEETROOT
+   note in Hero.jsx). A small GSAP fade/scale-in, not the fall-and-rotate
+   the four products get — it is a hand detail. */
+.hero__beetroot {
+  position: absolute;
+  z-index: 3;
+}
+
+.hero__beetroot-stage .hero__product-shadow {
+  /* much smaller than the four main products' ground shadow — this is a
+     hand-held detail, not something casting a shadow on the lawn. */
+  width: 50%;
+  aspect-ratio: 4 / 1;
+  bottom: -0.05rem;
 }
 
 /* ---- cursor ---- */

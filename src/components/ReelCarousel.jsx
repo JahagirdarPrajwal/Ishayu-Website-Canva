@@ -81,6 +81,18 @@ export default function ReelCarousel({
   const slots = items.length * 2
   const loop = slots * pitch
 
+  /* ---- touch / pointer drag ----
+     The rail has no native scroll — position is just `state.offset` fed
+     through `layout()` — so dragging it means pausing the auto-drift,
+     moving `state.offset` by hand while the pointer is down, then handing
+     it back to a fresh infinite tween that continues from wherever the
+     drag left off. `touch-action: pan-y` on the rail (see the .css) is
+     what lets the browser keep vertical page scroll while this owns the
+     horizontal gesture — a swipe never scrolls the page sideways and never
+     fights a vertical scroll either. */
+  const dragRef = useRef(null)
+  const draggedRef = useRef(false)
+
   /* Sync audio muted property directly on video elements whenever unmutedSlot changes */
   useEffect(() => {
     for (let i = 0; i < slots; i += 1) {
@@ -140,24 +152,31 @@ export default function ReelCarousel({
   /* ---- GSAP drift + visibility ---- */
   useLayoutEffect(() => {
     const el = root.current
-    if (!el) return undefined
+    const rail = railRef.current
+    if (!el || !rail) return undefined
     const state = { offset: 0 }
     let drift
 
     const render = () => layout(state.offset)
 
+    const startDrift = (from) => {
+      drift?.kill()
+      if (reduced || !visible.current) return undefined
+      drift = gsap.to(state, {
+        offset: from + loop,
+        duration: loop / speed,
+        ease: 'none',
+        repeat: -1,
+        onUpdate: render,
+      })
+      driftRef.current = drift
+      return drift
+    }
+
     const ctx = gsap.context(() => {
       render()
-      if (!reduced) {
-        drift = gsap.to(state, {
-          offset: loop,
-          duration: loop / speed,
-          ease: 'none',
-          repeat: -1,
-          onUpdate: render,
-        })
-        driftRef.current = drift
-      }
+      startDrift(state.offset)
+
       ScrollTrigger.create({
         trigger: el,
         start: 'top bottom',
@@ -173,16 +192,74 @@ export default function ReelCarousel({
             })
             setUnmutedSlot(null)
           }
-          if (drift) (self.isActive ? drift.play() : drift.pause())
+          if (self.isActive) startDrift(state.offset)
+          else drift?.pause()
           render()
         },
       })
+
+      /* a swipe drags the rail directly; it never touches page scroll
+         because touch-action: pan-y (see the .css) tells the browser this
+         element only claims the horizontal axis.
+
+         Critical: nothing here may run on a plain pointerdown. Calling
+         setPointerCapture (or pausing the drift) unconditionally on down —
+         the previous bug — retargets the *click* the browser synthesizes
+         on pointerup to the capturing element (the rail) instead of
+         whatever was actually under the finger, so the card's <a href>
+         never navigates and the speaker button's own onClick never fires,
+         no matter what stopPropagation it calls: that native capture is
+         set (and that retargeting decided) before React's synthetic
+         dispatch ever runs. So a gesture starts in a "pending" state that
+         touches nothing, and only becomes a real drag — pausing the drift,
+         capturing the pointer, marking draggedRef so the click that
+         follows is suppressed — once the pointer has actually moved past a
+         small threshold. A plain tap/click never crosses that threshold,
+         so it reaches its target exactly as if this listener did not
+         exist. */
+      const unit = () => rail.clientWidth / 1366
+      let pending = null // { pointerId, startX, startOffset, committed }
+
+      const onDown = (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return
+        pending = { pointerId: e.pointerId, startX: e.clientX, startOffset: state.offset, committed: false }
+      }
+      const onMove = (e) => {
+        if (!pending || pending.pointerId !== e.pointerId) return
+        const dx = pending.startX - e.clientX
+        if (!pending.committed) {
+          if (Math.abs(dx) < 6) return
+          pending.committed = true
+          draggedRef.current = true
+          drift?.pause()
+          rail.setPointerCapture?.(e.pointerId)
+        }
+        state.offset = pending.startOffset + dx / unit()
+        render()
+      }
+      const endDrag = (e) => {
+        if (!pending || (e.pointerId !== undefined && pending.pointerId !== e.pointerId)) return
+        if (pending.committed && visible.current) startDrift(state.offset)
+        pending = null
+      }
+
+      rail.addEventListener('pointerdown', onDown)
+      rail.addEventListener('pointermove', onMove)
+      rail.addEventListener('pointerup', endDrag)
+      rail.addEventListener('pointercancel', endDrag)
+      dragRef.current = { onDown, onMove, endDrag }
     }, el)
 
     const onResize = () => render()
     window.addEventListener('resize', onResize)
     return () => {
       window.removeEventListener('resize', onResize)
+      if (dragRef.current) {
+        rail.removeEventListener('pointerdown', dragRef.current.onDown)
+        rail.removeEventListener('pointermove', dragRef.current.onMove)
+        rail.removeEventListener('pointerup', dragRef.current.endDrag)
+        rail.removeEventListener('pointercancel', dragRef.current.endDrag)
+      }
       ctx.revert()
       driftRef.current = null
       videoRefs.current.forEach((v) => v && v.pause())
@@ -234,7 +311,16 @@ export default function ReelCarousel({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`${item.title} — open this reel on Instagram`}
-              onClick={(e) => onItemClick?.(item, originalIdx, e)}
+              onClick={(e) => {
+                /* a swipe that ended on top of a card should not also
+                   follow its link — only a genuine tap/click does */
+                if (draggedRef.current) {
+                  e.preventDefault()
+                  draggedRef.current = false
+                  return
+                }
+                onItemClick?.(item, originalIdx, e)
+              }}
               onMouseEnter={() => {
                 if (driftRef.current && !driftRef.current.paused()) {
                   driftRef.current.pause()

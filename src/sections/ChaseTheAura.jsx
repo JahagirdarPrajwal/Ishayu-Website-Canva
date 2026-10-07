@@ -51,7 +51,7 @@ export default function ChaseTheAura() {
     mm.add(
       { desktop: DESKTOP, motionOK: '(prefers-reduced-motion: no-preference)' },
       (ctx) => {
-        if (!ctx.conditions.desktop || !ctx.conditions.motionOK) {
+        if (!ctx.conditions.motionOK) {
           setHeadingIn(true)
           setClosingIn(true)
           setIeIn(true)
@@ -64,7 +64,8 @@ export default function ChaseTheAura() {
         findRuns.forEach((run) => armTypeReveal(run))
         closeRuns.forEach((run) => armTypeReveal(run))
 
-        /* 1. the IE mark unfolds out of blocks as the section arrives */
+        /* 1. the IE mark unfolds out of blocks as the section arrives —
+           geometry-free, so it runs the same at every width */
         ScrollTrigger.create({
           trigger: el.querySelector('.aura__ie'),
           start: 'top 82%',
@@ -72,9 +73,7 @@ export default function ChaseTheAura() {
           onEnter: () => setIeIn(true),
         })
 
-        /* 2. "chase the aura", then the marker through the italic. The band
-           sits a little above the word in the export and stays there — only
-           the reveal is animated. */
+        /* 2. "chase the aura", then the marker through the italic */
         const head = gsap.timeline({
           scrollTrigger: { trigger: r.chase, start: 'top 84%' },
           onStart: () => setHeadingIn(true),
@@ -94,7 +93,9 @@ export default function ChaseTheAura() {
         /* 4. the tiles drop onto the ring one after another. The entrance is
            on each tile's inner box, not on the orbit container — scaling the
            container would take the figure with it, and the outer box is
-           where Motion writes the offset-path transform. */
+           where Motion writes the offset-path transform. Same on mobile: the
+           orbit is still the orbit, just smaller (CLAUDE.md requires it stay
+           — OrbitImages already scales its whole space to its container). */
         gsap.from(el.querySelectorAll('.orbit-item__inner'), {
           scale: 0.3,
           opacity: 0,
@@ -111,14 +112,17 @@ export default function ChaseTheAura() {
           scrollTrigger: { trigger: r.orbit, start: 'top 72%' },
         })
 
-        /* 5. the closing heading, its marker, then the body copy */
-        /* Trigger on the copy itself, not on .aura__closing: that wrapper is
-           pinned to the top of the section (top: 0, its children carry the
-           14.24rem offset), so its box sits ~1400px above the text and the
-           whole sequence fired and finished long before the copy was in
-           frame. */
+        /* 5. the closing heading, its marker, then the body copy.
+           On desktop this triggers on the line itself because .aura__closing
+           is pinned far above it (see the note kept below); on mobile that
+           wrapper is a normal flow box right above the line, so triggering
+           on it is equally correct and this still only needs the one
+           conditional for the trigger element. */
         const close = gsap.timeline({
-          scrollTrigger: { trigger: r.closingLine1, start: 'top 85%' },
+          scrollTrigger: {
+            trigger: ctx.conditions.desktop ? r.closingLine1 : el.querySelector('.aura__closing'),
+            start: 'top 85%',
+          },
           onStart: () => setClosingIn(true),
         })
         close.to({}, { duration: 1.05 })
@@ -177,17 +181,17 @@ export default function ChaseTheAura() {
 
       <div className="aura__headline">
         <span className="aura__chase" ref={set('chase')}>
-          <BlurText play={headingIn} delay={130} stepDuration={0.4}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27}>
             chase the
           </BlurText>
         </span>
         <span className="hl aura__aura" ref={set('band')}>
-          <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={2}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27} indexOffset={2}>
             aura
           </BlurText>
         </span>
         <span className="aura__energy">
-          <BlurText play={headingIn} delay={130} stepDuration={0.4} indexOffset={3}>
+          <BlurText play={headingIn} delay={85} stepDuration={0.27} indexOffset={3}>
             (and the energy...)
           </BlurText>
         </span>
@@ -203,12 +207,12 @@ export default function ChaseTheAura() {
 
       <div className="aura__closing">
         <span className="aura__closing-line1" ref={set('closingLine1')}>
-          <BlurText play={closingIn} delay={130} stepDuration={0.4}>
+          <BlurText play={closingIn} delay={85} stepDuration={0.27}>
             find your
           </BlurText>
         </span>
         <span className="hl aura__closing-line2" ref={set('closingBand')}>
-          <BlurText play={closingIn} delay={130} stepDuration={0.4} indexOffset={2}>
+          <BlurText play={closingIn} delay={85} stepDuration={0.27} indexOffset={2}>
             better choice
           </BlurText>
         </span>

@@ -1,0 +1,191 @@
+/* ---------- Product Page — static recreation of "2.png" ----------
+   Same design-pixel-÷-100-in-rem convention as the homepage (CLAUDE.md §2),
+   but built as normal document flow (grid/flex), not absolute-positioned
+   over a fixed artboard — a product grid is naturally flow content, and
+   flow reflows on its own as the root font-size rebases below 860px
+   (main.jsx), so this needs no responsive.css entries to avoid overflow. */
+
+.products {
+  position: relative;
+  width: 100%;
+  background: var(--white);
+  padding-bottom: 0.6rem;
+}
+
+/* ---- header ----
+   A positioned box for the shared Header (logo + pills) to sit in, the
+   same role .hero plays on the homepage. No promotional strip (brief §2):
+   the page simply begins here. */
+.products__header {
+  position: relative;
+  height: 1.2rem;
+}
+
+/* the wordmark is cream/pale-yellow — drawn for the hero's blue sky and
+   the footer's green, its only two homepage contexts. This is the first
+   white-background placement, where that colour is nearly invisible, so
+   it's recoloured solid black here only (Header.css / Hero's own render
+   are untouched). */
+.products__header .hero__logo {
+  filter: brightness(0);
+}
+
+/* ---- heading ---- */
+.products__heading {
+  margin: 1.4rem 0 0;
+  padding-left: 3.04rem;
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: var(--track-display);
+  color: #137445;
+}
+
+/* ---- body: sidebar + grid ---- */
+.products__body {
+  display: flex;
+  align-items: flex-start;
+  padding: 1.3rem 0.32rem 0 0.29rem;
+  gap: 0;
+}
+
+/* ---- category sidebar ----
+   Visual recreation only — no filtering wired up yet (brief §6). */
+.products__sidebar {
+  flex: 0 0 2.75rem;
+  width: 2.75rem;
+}
+
+.products__sidebar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.products__sidebar li {
+  margin-bottom: 0.33rem;
+  font-size: 0.15rem;
+  font-weight: 400;
+  letter-spacing: var(--track-body);
+  color: #137445;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.products__sidebar li:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- grid ----
+   1fr columns, not a fixed rem width: at 1366px this resolves to almost
+   exactly the 325px columns measured off "2.png", and it simply never
+   overflows at any narrower width either, which is what the brief asks
+   for ahead of the dedicated mobile pass (§14). */
+.products__grid {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 0.28rem;
+  row-gap: 1.18rem;
+}
+
+.products__card {
+  display: flex;
+  flex-direction: column;
+  /* grid items default to min-width:auto, which refuses to shrink below
+     the longest unbreakable word in the description text — that forced
+     every column wider than its 1fr share and overflowed the page at
+     narrow widths */
+  min-width: 0;
+}
+
+.products__image {
+  width: 100%;
+  aspect-ratio: 325 / 442;
+  overflow: hidden;
+  background: #e4e4e4; /* the product-shoot assets already carry their own
+                           studio backdrop; this is only a placeholder tone
+                           in case an image is slow to decode */
+}
+
+/* the image itself, and its hover-flip back face, are now
+   src/components/ProductCard.css — .products__image above still owns the
+   box (size/aspect-ratio/background), unchanged from the static pass */
+
+.products__category {
+  margin: 0.15rem 0 0;
+  font-size: 0.13rem;
+  font-weight: 400;
+  letter-spacing: var(--track-body);
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+
+.products__name {
+  margin: 0.08rem 0 0;
+  font-size: 0.16rem;
+  font-weight: 700;
+  letter-spacing: var(--track-body);
+  text-transform: uppercase;
+  color: #137445;
+}
+
+.products__desc {
+  margin: 0.09rem 0 0;
+  font-size: 0.135rem;
+  line-height: 0.18rem;
+  letter-spacing: var(--track-body);
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+
+.products__price {
+  margin: 0.12rem 0 0;
+  font-size: 0.15rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* ---- mobile safety net, not the dedicated pass ----
+   Below 860px the root rebases to a 430px canvas (main.jsx), and the
+   generous desktop paddings above (3.04rem / 2.75rem sidebar, etc.) are
+   proportioned for the 1366px one — left as they are, they alone eat most
+   of a 430px canvas and force text past the viewport edge. This is only
+   enough to stop that overflow (brief §14 — "do not intentionally
+   introduce new overflow"); the real mobile composition is a separate,
+   later task. */
+@media (max-width: 859.98px) {
+  .products__heading {
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+    font-size: 0.6rem;
+    margin-top: 1.5rem;
+  }
+
+  .products__body {
+    flex-direction: column;
+    padding: 0.5rem 0.3rem 0;
+  }
+
+  .products__sidebar {
+    flex-basis: auto;
+    width: auto;
+    margin-bottom: 0.4rem;
+  }
+
+  .products__sidebar ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.3rem;
+  }
+
+  .products__sidebar li {
+    margin-bottom: 0;
+  }
+
+  .products__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

@@ -11,6 +11,18 @@
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
+  /* stays none: in this preserve-3d/perspective context a flat, inset:0
+     ancestor with pointer-events:auto wins hit-testing over its own
+     transformed (translate3d/rotateY) children at the same screen point —
+     confirmed with elementFromPoint() — which silently ate every click and
+     the speaker button. The drag/swipe listeners are native
+     addEventListener calls on this element, not React-level, so they still
+     receive pointerdown/move/up that *originate* on a card or the speaker
+     button (pointer-events:auto) as those bubble up — an ancestor's own
+     pointer-events value never blocks bubbling from a hit-testable
+     descendant. Only starting a drag from the bare gap between cards is
+     given up by reverting this; that trade keeps clicking and the speaker
+     working, which matters far more. */
   pointer-events: none;
 }
 
@@ -23,9 +35,18 @@
   transform-origin: center center;
   will-change: transform, opacity;
   backface-visibility: hidden;
-  cursor: pointer;
+  cursor: grab;
   pointer-events: auto;
   text-decoration: none;
+  /* hands the vertical axis to native page scroll and keeps the
+     horizontal one free for the drag listeners on .reels__rail (see
+     above) — a swipe that starts on a card never scrolls the page
+     sideways and never fights a vertical scroll either */
+  touch-action: pan-y;
+}
+
+.reels__card:active {
+  cursor: grabbing;
 }
 
 .reels__card video {

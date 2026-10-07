@@ -20,12 +20,13 @@
   --white: #ffffff;
   --ink: #000000;
 
-  /* loading screen — both sampled from the artwork rather than guessed:
-     the cream is the wordmark colour in `ishayu logo.png`, the green is the
-     ground in `aura/aura-bg.jpg` (the lime pill green is too light to read
-     as a huge wordmark on cream) */
+  /* loading screen — the cream is the wordmark colour in `ishayu logo.png`.
+     The wordmark text is a dark green: darker than the brand's grass/olive
+     tones (#4d7a28, #4f8d20, the original #55781b this token held), but
+     pulled back from the near-black #122e08 tried first — on the cream
+     background that read as black, not green. */
   --cream: #f5f5dd;
-  --green-deep: #55781b;
+  --green-deep: #2d5016;
 
   /* ---- type ---- */
   --sans: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;

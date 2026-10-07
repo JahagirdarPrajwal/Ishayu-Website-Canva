@@ -1,0 +1,57 @@
+/* ---------- Header (shared nav: logo + 5 pills) ----------
+   Moved out of Hero.css verbatim — same selectors, same values — so both
+   Hero.jsx and the Product Page can use them without duplicating a single
+   rule. Nothing here changed in the move; only the file it lives in did. */
+
+/* ---- wordmark, top-left ----
+   Sits in the open corner above the racing card and left of the first nav
+   pill (home starts at 3.35rem) — measured so it clears both: bottom edge
+   0.995rem is well above the card's 1.73rem top, right edge 1.5rem is well
+   short of the pill row. Sized from the asset's own 212:90 so it is never
+   stretched. */
+.hero__logo {
+  position: absolute;
+  left: 0.42rem;
+  top: 0.535rem;
+  width: 1.08rem;
+  aspect-ratio: 212 / 90;
+  z-index: 10;
+}
+
+/* ---- navigation ---- */
+.hero__nav {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+/* The pill is now just the measured box the OriginKit tactile button sits
+   in — border, type and fill moved into the component's props so it can
+   animate them (see src/components/NavPill.jsx). The geometry below is
+   unchanged from the approved recreation. */
+.hero__pill {
+  position: absolute;
+  top: 0.57rem;
+  height: 0.39rem;
+  /* the button's outer wrapper is an inline-block, so in a normal block the
+     line box's baseline leading would push it below the slot — flex takes
+     the cap out of the text flow and stretches it to the measured box */
+  display: flex;
+}
+
+.hero__pill > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The button's base layer stays visible at rest, which is what makes the
+   press read as a press: the pill sits raised on its ledge, and clicking
+   sinks the cap down onto it. Revealing the ledge on hover instead inverts
+   the reading — a flat pill that grows a shadow looks like it is popping
+   up, so the click afterwards feels like a return rather than a push.
+   The ledge inherits the cap's border, which would draw a second outline
+   below every pill; the fill alone carries it, so the border is dropped.
+   !important because the component sets it inline. */
+.hero__pill div[aria-hidden='true'] {
+  border-color: transparent !important;
+}

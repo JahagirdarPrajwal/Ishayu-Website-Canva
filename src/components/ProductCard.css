@@ -1,0 +1,87 @@
+/* ---------- ProductCard — hover flip ----------
+   .products__image keeps its exact box from ProductsPage.css (aspect-ratio
+   325/442, same width) — only what's inside it changed, so the grid itself
+   is untouched (product-detail brief §15 — "do not change the three-column
+   desktop grid"). */
+
+.products__card {
+  cursor: pointer;
+}
+
+.products__image {
+  perspective: 1400px;
+}
+
+.products__flip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* gated to real hover + a fine pointer — on touch the image never flips
+   (brief §14: "do not depend on hover"); a tap goes straight to onSelect,
+   wired in ProductCard.jsx regardless of flip state (brief §13) */
+@media (hover: hover) and (pointer: fine) {
+  .products__card:hover .products__flip,
+  .products__card:focus-visible .products__flip {
+    transform: rotateY(180deg);
+  }
+}
+
+.products__flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.products__flip-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* the dark Ishayu green interactive state (brief §1/§13) — the same
+   --green-deep token the loader wordmark uses, not a new colour */
+.products__flip-back {
+  transform: rotateY(180deg);
+  background: var(--green-deep);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.09rem;
+  padding: 0.2rem;
+  text-align: center;
+}
+
+.products__flip-name {
+  margin: 0;
+  font-size: 0.16rem;
+  font-weight: 700;
+  letter-spacing: var(--track-body);
+  text-transform: uppercase;
+}
+
+.products__flip-price {
+  margin: 0 0 0.06rem;
+  font-size: 0.17rem;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.products__flip-select {
+  display: inline-block;
+  padding: 0.07rem 0.18rem;
+  border: 0.012rem solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  font-size: 0.115rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

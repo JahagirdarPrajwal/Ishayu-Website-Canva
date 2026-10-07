@@ -1,0 +1,337 @@
+/* ---------- ProductModal ----------
+   Rebuilt against "Screenshot ref.png" (the HAAN "Apple a Day" product
+   page): a bordered, connected editorial grid — one full-height image
+   cell on the left, and three rule-divided cells on the right (name/
+   price on top; ingredients and purchase actions below it, side by
+   side) — not a rounded-card popup. White background (modal-refinement
+   brief §2), sized to fit the viewport with no internal scroll (§13). */
+
+.modal__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(20, 24, 18, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem;
+}
+
+/* Width AND height are both capped independently (vw/vh alongside a rem
+   ceiling), rather than letting an aspect-ratio derive one from the
+   other — that's what guarantees this always fits the viewport with
+   room to spare, on a short laptop screen as much as a tall monitor,
+   without ever needing to scroll internally. */
+.modal__panel {
+  position: relative;
+  width: min(92vw, 11.6rem);
+  height: min(86vh, 6.3rem);
+  background: var(--white);
+  border: 0.012rem solid #1a1a1a;
+  box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.modal__close {
+  position: absolute;
+  top: 0.14rem;
+  right: 0.16rem;
+  z-index: 1;
+  width: 0.3rem;
+  height: 0.3rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  color: #1a1a1a;
+  font-size: 0.22rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.modal__close:hover {
+  background: #fff;
+}
+
+.modal__grid {
+  display: grid;
+  grid-template-columns: 0.92fr 1fr;
+  height: 100%;
+}
+
+/* ---- left: full-height image ---- */
+.modal__image {
+  position: relative;
+  height: 100%;
+  background: #e4e4e4;
+  overflow: hidden;
+}
+
+.modal__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* small, subtle — bottom-right of the image panel, over the photo, not
+   "Previous"/"Next" text below it (modal-refinement brief §4) */
+.modal__arrows {
+  position: absolute;
+  right: 0.16rem;
+  bottom: 0.16rem;
+  display: flex;
+  gap: 0.06rem;
+}
+
+.modal__arrows button {
+  width: 0.32rem;
+  height: 0.32rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  color: #1a1a1a;
+  font-size: 0.15rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.modal__arrows button:hover:not(:disabled) {
+  background: #fff;
+}
+
+.modal__arrows button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ---- right: the editorial grid of cells ----
+   Top cell spans both columns; below it, info (wider) and actions
+   (narrower) sit side by side — the same proportion the reference gives
+   its description paragraph vs. its HOW TO USE/INGREDIENTS/SHIPPING
+   column. Thin rules only: no rounded cards, no capsule containers
+   (brief §5). */
+.modal__right {
+  display: grid;
+  grid-template-columns: 1fr 0.78fr;
+  /* measured off the reference: the top cell is the dominant section,
+     roughly 57/43 of the right side's height, not three near-equal
+     thirds — the name is the hero of this half of the modal */
+  grid-template-rows: 1.35fr 1fr;
+  height: 100%;
+  border-left: 0.012rem solid #1a1a1a;
+}
+
+.modal__cell {
+  padding: 0.22rem 0.26rem;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.modal__cell--top {
+  grid-column: 1 / -1;
+  border-bottom: 0.012rem solid #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal__cell--info {
+  grid-column: 1;
+  grid-row: 2;
+  border-right: 0.012rem solid #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.modal__cell--actions {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.12rem;
+}
+
+/* ---- top cell: category / name / qty + price ---- */
+.modal__category {
+  margin: 0;
+  font-size: 0.115rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b6456;
+}
+
+/* the hero of the whole right side — given real room to breathe in a
+   dominant top cell, not compressed into a shallow header strip */
+.modal__name {
+  margin: 0.08rem 0 0;
+  font-size: 0.52rem;
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  color: #137445;
+}
+
+.modal__qty-price {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.26rem;
+}
+
+/* flat "− 1 +", no pill/border chrome (brief §8) */
+.modal__qty {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.modal__qty button {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 0.2rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  color: #1a1a1a;
+}
+
+.modal__qty span {
+  min-width: 0.2rem;
+  text-align: center;
+  font-size: 0.18rem;
+  font-weight: 700;
+}
+
+.modal__price {
+  font-size: 0.22rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* ---- info cell: short blurb + ingredients ---- */
+.modal__blurb {
+  margin: 0;
+  font-size: 0.125rem;
+  line-height: 0.18rem;
+  color: #3a362e;
+}
+
+.modal__detail-label {
+  margin: 0.14rem 0 0;
+  font-size: 0.105rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+}
+
+.modal__detail-text {
+  margin: 0.04rem 0 0;
+  font-size: 0.11rem;
+  line-height: 0.165rem;
+  letter-spacing: var(--track-body);
+  color: #6b6456;
+  text-transform: uppercase;
+}
+
+.modal__coming-soon {
+  margin: 0.1rem 0 0;
+  font-size: 0.1rem;
+  font-style: italic;
+  color: #a39c8a;
+}
+
+/* ---- actions cell: Subscribe & Save / Add to Cart ----
+   Rectangular, part of the grid — no rounded pills (brief §10/§12). */
+.modal__subscribe {
+  width: 100%;
+  padding: 0.12rem 0;
+  border: 0.012rem solid #1a1a1a;
+  background: var(--white);
+  color: #1a1a1a;
+  font-size: 0.125rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.modal__subscribe.is-active {
+  background: var(--green-deep);
+  border-color: var(--green-deep);
+  color: var(--white);
+}
+
+.modal__add {
+  width: 100%;
+  padding: 0.14rem 0;
+  border: none;
+  background: var(--green-deep);
+  color: var(--white);
+  font-size: 0.135rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.modal__add:hover {
+  filter: brightness(1.12);
+}
+
+/* ---- adapt to smaller viewports (not the full mobile pass) ---- */
+@media (max-width: 859.98px) {
+  .modal__panel {
+    width: 94vw;
+    height: 90vh;
+  }
+
+  .modal__grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+
+  .modal__image {
+    min-height: 0;
+  }
+
+  .modal__right {
+    border-left: none;
+    border-top: 0.012rem solid #1a1a1a;
+    grid-template-rows: auto auto auto;
+  }
+
+  .modal__cell--info {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    border-right: none;
+    border-bottom: 0.012rem solid #1a1a1a;
+  }
+
+  .modal__cell--actions {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .modal__name {
+    font-size: 0.4rem;
+  }
+}
