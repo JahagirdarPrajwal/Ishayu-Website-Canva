@@ -9,6 +9,9 @@
   position: relative;
   width: 100%;
   background: var(--white);
+  /* breathing room between the last product row and the solid-green
+     Footer right after it — matches the white gap "2.png" itself shows
+     above its own footer block */
   padding-bottom: 0.6rem;
 }
 
@@ -63,17 +66,46 @@
 }
 
 .products__sidebar li {
-  margin-bottom: 0.33rem;
+  /* the <li> itself never set a font-size, only the <button> inside it
+     does — so its own line-box was being computed off the inherited
+     root font-size (1rem = 100px), giving each item a ~109px-tall box
+     around 15px-tall visible text. That, not the margin, was most of
+     the "too much space" the items actually had; matching the button's
+     own size here is what collapses it down to its real content height. */
   font-size: 0.15rem;
-  font-weight: 400;
-  letter-spacing: var(--track-body);
-  color: #137445;
-  text-transform: uppercase;
+  /* was 0.33rem — read as five disconnected items rather than one grouped
+     list (client feedback); still clearly separate, clickable targets at
+     this spacing, just closer together */
+  margin-bottom: 0.1rem;
   white-space: nowrap;
 }
 
 .products__sidebar li:last-child {
   margin-bottom: 0;
+}
+
+/* functional now (footer/nav brief §6–11) — same type treatment the
+   plain <li> text used to carry, just on a <button> so it's a real
+   control; no border/background/padding of its own to keep the existing
+   editorial look intact, only a subtle hover to signal it's clickable */
+.products__sidebar button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.15rem;
+  font-weight: 400;
+  letter-spacing: var(--track-body);
+  color: #137445;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.products__sidebar button:hover,
+.products__sidebar button:focus-visible {
+  opacity: 0.65;
 }
 
 /* ---- grid ----

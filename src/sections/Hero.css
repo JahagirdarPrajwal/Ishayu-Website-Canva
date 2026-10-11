@@ -73,30 +73,24 @@
   width: 100%;
 }
 
+/* A sibling of .hero__card, not a descendant of it (see the note in
+   HeroProduct.jsx) — left/top/width all come from Hero.jsx as inline
+   styles computed straight from the product's own x/y/w/h, independent of
+   the card's rotation, which is what keeps it sitting exactly below the
+   product regardless of how much that product tilts. */
 .hero__product-shadow {
   position: absolute;
-  left: 50%;
-  bottom: -0.05rem;
-  width: 64%;
-  /* was a fixed 0.1rem — constant regardless of how big the product
-     itself is, which on the larger products left a shadow that read as
-     tiny relative to them. aspect-ratio keeps it proportional to its own
-     (percentage) width instead. Kept close to the product's own bottom
-     edge (small `bottom` offset, flat aspect ratio) rather than reaching
-     further down — on the larger products that reach reliably landed on
-     top of the *next* product below it instead of on open grass. */
-  aspect-ratio: 4.2 / 1;
+  z-index: 1;
   /* darker core, and it holds that darkness out further (55% instead of
      ~0%) before fading, which is what actually reads as a shadow against
-     grass — the previous rgba(6,14,6,0.75) gradient, combined with the
-     motion opacity below, worked out to roughly half that strength and
-     was effectively invisible once blurred (confirmed by temporarily
-     forcing it solid red — the position/size were already correct, only
-     the contrast was not). */
+     grass — a lighter gradient here, combined with the motion opacity
+     below, worked out to roughly half that strength and was effectively
+     invisible once blurred (confirmed by temporarily forcing it solid
+     red — the position/size were already correct, only the contrast was
+     not). */
+  aspect-ratio: 4.2 / 1;
   background: radial-gradient(ellipse at center, rgba(4, 10, 4, 0.95) 0%, rgba(4, 10, 4, 0.85) 55%, rgba(4, 10, 4, 0) 100%);
   filter: blur(0.015rem);
-  transform: translateX(-50%);
-  transform-origin: center;
   pointer-events: none;
 }
 
@@ -116,13 +110,9 @@
   z-index: 3;
 }
 
-.hero__beetroot-stage .hero__product-shadow {
-  /* much smaller than the four main products' ground shadow — this is a
-     hand-held detail, not something casting a shadow on the lawn. */
-  width: 50%;
-  aspect-ratio: 4 / 1;
-  bottom: -0.05rem;
-}
+/* the Beetroot bar renders with showShadow={false} (Hero.jsx) — no ground
+   shadow at all, it's a hand-held detail, not something casting a shadow
+   on the lawn. */
 
 /* ---- cursor ---- */
 .hero__cursor {

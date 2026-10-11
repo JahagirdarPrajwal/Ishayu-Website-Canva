@@ -54,7 +54,7 @@ const BODY = [
 const ADDRESS = ['No.66, 8th ‘A’ Main, BTM 1st', 'Stage, Bangalore – 560029,', 'Karnataka, India']
 const PHONE = ['+91 80 35893150 / 35893151', '+91 9686623006']
 
-export default function Footer() {
+export default function Footer({ variant = 'photo' }) {
   const root = useRef(null)
   const refs = useRef({})
   const [headingIn, setHeadingIn] = useState(false)
@@ -116,8 +116,17 @@ export default function Footer() {
   }, [])
 
   return (
-    <footer className="section footer" ref={root}>
-      <img className="section__bg" src="/assets/footer/footer-bg.jpg" alt="" />
+    <footer className={`section footer footer--${variant}`} ref={root}>
+      {/* Product Page footer brief: a clean solid-green block, no
+          grass/hills photo (the homepage's own treatment stays untouched —
+          this is a per-page variant, not a redesign of the shared
+          component). Our Story's own variant uses a transparent-background
+          hill/tree cutout instead of a photo, so its own blue page
+          background shows through above the hill line — see Footer.css. */}
+      {variant === 'photo' && <img className="section__bg" src="/assets/footer/footer-bg.jpg" alt="" />}
+      {variant === 'landscape' && (
+        <img className="section__bg footer__landscape-bg" src="/assets/story/footer-landscape.png" alt="" />
+      )}
 
       {/* The band is the parent of its BlurText, not a child — BlurText
           remounts its subtree once it settles, which would drop the inline

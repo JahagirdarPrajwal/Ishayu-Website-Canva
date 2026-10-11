@@ -15,12 +15,13 @@ import './ProductCard.css'
    clicking specifically on the green back side").
 ================================================================== */
 
-export default function ProductCard({ product, onSelect }) {
+export default function ProductCard({ product, onSelect, cardRef }) {
   const { category, name, description, price, image } = product
 
   return (
     <article
       className="products__card"
+      ref={cardRef}
       role="button"
       tabIndex={0}
       onClick={() => onSelect(product)}

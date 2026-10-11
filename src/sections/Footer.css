@@ -10,6 +10,65 @@
   object-position: center top;
 }
 
+/* ---- solid variant (Products page) ----
+   #137445 sampled directly from "2.png"'s own footer block — the same
+   green already used for headings/category labels there, not the
+   homepage footer's photo-derived #4f8d20. */
+.footer--solid {
+  background: #137445;
+}
+
+/* ---- landscape variant (Our Story page) ----
+   "3.png" shows the hills/tree sitting directly on the page's own blue
+   background, with no white band and no separate green block underneath
+   — the footer IS the landscape, the same way the homepage's footer is
+   footer-bg.jpg. footer-landscape.png is a white-keyed cutout of the
+   client-supplied "better quality background image.png" (a flat white
+   backdrop, not real alpha — keyed with edge colour decontamination so
+   the tree canopy doesn't carry a white fringe), so with this section's
+   own background left transparent-to-the-gradient (see below), the blue
+   shows straight through everywhere the cutout is transparent, and only
+   the hill/tree pixels paint over it — no rectangular image edge
+   anywhere. The source is a wide 1983:793 panorama with the tree well
+   over to the right, so object-position is pushed right instead of
+   centred — centring it would crop the tree out of frame entirely under
+   object-fit: cover. The source image itself is untouched beyond the
+   white-key/decontamination — no crop, no resize, no distortion. */
+.footer--landscape {
+  height: 12.24rem;
+  /* <Footer> is a sibling of .story, not nested inside it — it does not
+     inherit the blue gradient, so this can't be transparent (that just
+     reveals the page body's own background instead). #44c4ff is the
+     exact colour .story's own gradient ends on (OurStoryPage.css), so the
+     two meet with no visible seam — the gradient supplies the "blue" that
+     shows through everywhere this section's own image is transparent. */
+  background: #44c4ff;
+}
+
+/* .footer .section__bg{object-position:center top} (Footer.css above) has
+   higher specificity than a bare .footer__landscape-bg class would — this
+   compound selector is what actually wins the cascade */
+.footer .footer__landscape-bg {
+  object-fit: cover;
+  object-position: 90% bottom;
+}
+
+.footer--landscape .footer__heading {
+  top: 6.2rem;
+}
+
+.footer--landscape .footer__body {
+  top: 7.66rem;
+}
+
+.footer--landscape .footer__contact {
+  top: 8.84rem;
+}
+
+.footer--landscape .footer__logo {
+  top: 11.1rem;
+}
+
 .footer__heading {
   margin: 0;
   position: absolute;

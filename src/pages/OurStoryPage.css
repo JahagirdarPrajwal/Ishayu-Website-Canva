@@ -76,7 +76,14 @@
   color: var(--ink);
   --hl-x: 0.03rem;
   --hl-y: 0.02rem;
-  --hl-w: calc(100% + 0.06rem);
+  /* was calc(100% + 0.06rem) — fine for a static page, but addBandWipe
+     (anim/helpers.js) tweens --hl-w from a plain 0rem to this value, and
+     GSAP can't interpolate between a bare length and a calc() expression
+     mixing % and rem; it would just snap instead of wiping. Measured the
+     resolved pseudo-element width directly (band rendered at rest, this
+     page's own 0.86rem heading size) and hardcoded it — same convention
+     every other band on the site already uses (CLAUDE.md §5). */
+  --hl-w: 2.07rem;
   --hl-h: 0.9em;
 }
 
@@ -114,6 +121,16 @@
   font-size: 0.185rem;
   line-height: 0.27rem;
   letter-spacing: var(--track-body);
+}
+
+/* inline-block, not inline — same reason every other type-reveal run on
+   the site uses it (.edit__body-run, .footer__run): clip-path on a plain
+   inline element that wraps across several lines clips each line
+   fragment independently in a browser-dependent way. inline-block gives
+   it one well-defined box, so the reveal (addTypeReveal, anim/helpers.js)
+   sweeps predictably across the whole paragraph. */
+.story__run {
+  display: inline-block;
 }
 
 .story__block p:last-child {
@@ -168,21 +185,6 @@
   font-weight: 700;
   letter-spacing: var(--track-body);
   color: var(--white);
-}
-
-/* ---- landscape / tree ----
-   Picks up in the exact blue (#44c4ff) the gradient above ends on, so
-   the seam between the CSS gradient and this cropped photo is invisible
-   (modal/gradient-refinement brief §3). */
-.story__landscape {
-  width: 100%;
-  line-height: 0;
-}
-
-.story__landscape img {
-  width: 100%;
-  height: auto;
-  display: block;
 }
 
 /* ---- mobile safety net, not the dedicated pass ---- */

@@ -48,7 +48,13 @@ const ROTATION_OVERSHOOT = 13
    calibrated against aura-bg.jpg (CLAUDE.md §6/§8.6). Deliberately not in
    PRODUCTS: its entrance, scale and levitation amplitude are all much
    smaller — it is a hand detail, not a fifth floating product. */
-const BEETROOT = { x: 663, y: 489, w: 62, h: 47, tilt: -6, amp: 3, duration: 3.6 }
+/* Re-calibrated against a fresh, precise grid measurement of the baked
+   bar in hero-bg.jpg itself (not a derived/re-cropped screenshot): the
+   chair spans raw x 695-900, y 665-850, and the bar's own visible centre
+   (the gap between his two hands) sits at raw x 800-865, y 615-650 —
+   converted to design px via the asset's 1366/1672 scale, that's a centre
+   of (680, 517). Previous passes had drifted left of this (663, 512). */
+const BEETROOT = { x: 649, y: 494, w: 62, h: 47, tilt: -3, amp: 3, duration: 3.6 }
 
 const u = (n) => `${n / 100}rem`
 
@@ -330,19 +336,22 @@ export default function Hero({ started = false }) {
             amp={BEETROOT.amp}
             duration={BEETROOT.duration}
             className="hero__beetroot-stage"
+            showShadow={false}
           />
         </div>
       </div>
 
       <div className="hero__collage">
-        {PRODUCTS.map(({ key, src, x, y, w, z, tilt, amp, duration, delay }) => (
-          <div
+        {PRODUCTS.map(({ key, src, x, y, w, h, z, tilt, amp, duration, delay }) => (
+          <HeroProduct
             key={key}
-            className="hero__card"
-            style={{ left: u(x), top: u(y), width: u(w), zIndex: z, '--tilt': `${tilt}deg` }}
-          >
-            <HeroProduct src={src} alt="" amp={amp} duration={duration} delay={delay} />
-          </div>
+            src={src}
+            alt=""
+            amp={amp}
+            duration={duration}
+            delay={delay}
+            card={{ x, y, w, h, z, tilt }}
+          />
         ))}
       </div>
 

@@ -44,6 +44,14 @@ const OBJECTS = [
   { key: 'wallet', x: 333, y: 293, w: 165, z: 2, rail: 1, alt: 'wallet' },
   { key: 'watch', x: 271, y: 268, w: 94, z: 3, rail: 1, alt: 'watch' },
   { key: 'tumbler', x: 91, y: 391, w: 109, z: 2, rail: 2, alt: 'tumbler' },
+  /* Sized against the rail's own tallest pieces, not an arbitrary width:
+     at its native 535:525 aspect, the tumbler (w109 → implied h≈240) and
+     laptop (w231 → implied h≈178) bracket a target height of ~196, so the
+     packet reads as a real object on the rack rather than a thumbnail
+     between them — a first pass at w120 (h≈118) undershot that badly.
+     Centred in the tumbler→laptop gap (200–439), bottom-aligned to the
+     same rail line the rest of this rack rests on. */
+  { key: 'coatz', x: 220, y: 437, w: 200, z: 2, rail: 2, alt: 'Ishayu Coatz chilli garlic cashews' },
   { key: 'laptop', x: 439, y: 482, w: 231, z: 2, rail: 2, alt: 'laptop' },
   /* The Moringa bar sits on rail 0, in the gap between the headphones and
      the keys — always visually on the top rack. It used to also carry a
@@ -83,8 +91,17 @@ const MOBILE_OBJECTS = [
   { key: 'keys', w: 100, ar: 246 / 264, x: 272, rail: 0, z: 2, alt: 'car keys' },
   { key: 'watch', w: 95, ar: 188 / 310, x: 48, rail: 1, z: 3, alt: 'watch' },
   { key: 'wallet', w: 150, ar: 330 / 246, x: 183, rail: 1, z: 2, alt: 'wallet' },
-  { key: 'tumbler', w: 100, ar: 218 / 480, x: 35, rail: 2, z: 2, alt: 'tumbler' },
-  { key: 'laptop', w: 170, ar: 462 / 356, x: 175, rail: 2, z: 2, alt: 'laptop' },
+  /* the bottom rail now carries three objects instead of two — tumbler
+     and laptop both narrowed a little to leave room for the new Coatz
+     packet between them, same bottom-aligned convention as the rest of
+     the rack */
+  { key: 'tumbler', w: 80, ar: 218 / 480, x: 10, rail: 2, z: 2, alt: 'tumbler' },
+  /* a modest, space-constrained version of the same desktop recalibration
+     — the mobile rail has far less free width to work with, so this isn't
+     pushed as far, but it's still a meaningfully bigger packet than before
+     rather than the undersized one */
+  { key: 'coatz', w: 95, ar: 535 / 525, x: 95, rail: 2, z: 2, alt: 'Ishayu Coatz chilli garlic cashews' },
+  { key: 'laptop', w: 150, ar: 462 / 356, x: 200, rail: 2, z: 2, alt: 'laptop' },
 ].map((o) => ({ ...o, y: mobileY(o.rail, hFromW(o.w, o.ar)) }))
 
 const BODY = [
